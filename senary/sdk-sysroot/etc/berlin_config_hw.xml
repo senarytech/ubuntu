@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Marvell>
+    <Berlin name="AMP config" version="1.0" rev="0">
+        <Soc name="BG7" version="CT" rev="Z1">
+            <CPU arch="ARM" name="a9" version="" rev="" clock="1000" number="2"></CPU>
+        </Soc>
+        <Board name="BG5CT DMP" product="DMP" project="RDK" version="1.0">
+            <Devices>
+                <TSI>
+                    <TSIPort0    isSerial="1"
+                             PinSelect="0"
+                             MsbFirst="0"
+                             ClkPol="0"
+                             ValidPol="1"
+                             SyncPol="1"
+                             ErrPol="1"
+                             IgnoreValid="0"
+                             IgnoreErr="0"></TSIPort0>
+                    <TSIPort1    isSerial="1"
+                             PinSelect="0"
+                             MsbFirst="0"
+                             ClkPol="0"
+                             ValidPol="1"
+                             SyncPol="1"
+                             ErrPol="1"
+                             IgnoreValid="0"
+                             IgnoreErr="0"></TSIPort1>
+                </TSI>
+                <!-- AVOUTPORT: Audio/Video output port from AVIF -->
+                <!-- AVIF_OUT_AUD: select which interfact on AVIF to output audio "I2S/SPDIF" -->
+                <AVOutput OutputDevice="AUDIO">
+                    <AVOUTPORT>
+                        <I2S_PRI Format ="0"
+                                Mode ="0"
+                                Type ="0"
+                                FrameRate="48000"
+                                ChannelBits = "2"
+                                DataBits = "3"
+                                BClkInv = "1"
+                                LRClkInv  ="1"
+                                ChannelMap="228"
+                                DebugMode = "0" />
+                        <I2S_SEC     Format ="0"
+                                Mode="0"
+                                Type="0"
+                                ChannelMap="0" />
+                        <!-- AOUT -->
+                        <!-- Format -->
+                        <!-- 0,I2S -->
+                        <!-- 1,TDM -->
+                        <!-- 2,VIRTUAL_TDM -->
+                        <!-- Mode -->
+                        <!--NORMAL = 0, -->
+                        <!--LEFT = 1, -->
+                        <!--RIGHT = 2, -->
+                        <!--Type, -->
+                        <!--1X2 = 0, -->
+                        <!--1X4 = 1,-->
+                        <!--1X6 = 2,-->
+                        <!--1X8 = 3,-->
+                        <!--2X2 = 4,-->
+                        <!--2X3 = 5,-->
+                        <!--2X4 = 6, -->
+                        <!--1X1 = 7, -->
+                        <!--3X2 = 8, -->
+                        <!--4X2 = 9, -->
+                        <!--ChannelBits, -->
+                        <!--0, CFM_16, -->
+                        <!--1, CFM_24, -->
+                        <!-- 228 0xE4, default map -->
+                    </AVOUTPORT>
+                </AVOutput>
+                <!-- AUDIO FORMAT: PCM AC3 DTS MPEG1 MP3 MPEG2 AAC ATRAC DDP DTSHD MAT DST WMAPRO MPEGH ONEBITAUDIO -->
+                <SinkDevice>
+                    <MUL_IDX>
+                        <PCM Support="1"
+                            SampleRate_48k="1"
+                            MaxChannelNr="4"
+                            ChannelMask="3221225475"
+                            BitDepth_WdLen24="1" />
+                    </MUL_IDX>
+                    <LR_IDX>
+                        <PCM Support="1"
+                            SampleRate_48k="1"
+                            MaxChannelNr="2"
+                            ChannelMask="3"
+                            BitDepth_WdLen24="1" />
+                    </LR_IDX>
+                    <SPDIF_IDX>
+                        <PCM Support="1"
+                            SampleRate_48k="1"
+                            SampleRate_44k="1"
+                            MaxChannelNr="2"
+                            ChannelMask="3"
+                            BitDepth_WdLen24="1" />
+                        <AC3 Support="1"
+                            SampleRate_48k="1"
+                            SampleRate_44k="1"
+                            MaxChannelNr="6"
+                            ChannelMask="63" />
+                        <DTS Support="1"
+                            SampleRate_48k="1"
+                            SampleRate_44k="1"
+                            MaxChannelNr="6"
+                            ChannelMask="63" />
+                    </SPDIF_IDX>
+                    <HDMI_IDX>
+                        <PCM Support="1"
+                            SampleRate_48k="1"
+                            MaxChannelNr="2"
+                            ChannelMask="3"
+                            BitDepth_WdLen16="1" />
+                        <AC3 Support="1"
+                            SampleRate_48k="1"
+                            MaxChannelNr="6"
+                            ChannelMask="63" />
+                    </HDMI_IDX>
+                    <BT_IDX>
+                        <PCM Support="1"
+                            SampleRate_48k="1"
+                            SampleRate_44k="1"
+                            MaxChannelNr="2"
+                            ChannelMask="3"
+                            BitDepth_WdLen24="1" />
+                    </BT_IDX>
+                    <LB_IDX>
+                        <PCM Support="1"
+                            SampleRate_48k="1"
+                            SampleRate_44k="1"
+                            MaxChannelNr="2"
+                            ChannelMask="3"
+                            BitDepth_WdLen24="1" />
+                    </LB_IDX>
+                </SinkDevice>
+
+                <!-- AVInput: configuration for AVIN component -->
+                <!-- InputDevice means type of AVIN, which can be one of below:
+                                        NONE
+                                        HDMIRX
+                                        CYPRESS
+                                        AUDIO
+                                        AVIF
+                                        KG2H -->
+
+                <AVInput InputDevice="HDMIRX">
+                    <!-- GPIO: Mapping from port on board to GPIO of SOC-->
+                    <!-- GPIO value is a 32bit value; bit[0~15] means GPIO number;-->
+                           <!-- bit[16~31] "1" means SM GPIO, "0" means SOC GPIO-->
+                    <GPIO  BOARD_HDMI_RX_HPD="0x10011">
+                    </GPIO>
+                </AVInput>
+                <ISPSS>
+                <ISP>
+                    <!-- ActiveSensors: Set corresponding bit for enabling sensors
+                                        bit0 - Sensor1
+                                        bit1 - Sensor2 -->
+                    <Sensors MaxSensorNum="2" ActiveSensors="3">
+                        <Sensor1 Name="IMX415"
+                                 OutputWidth="3840"
+                                 OutputHeight="2160"
+                                 Bitdepth="12"
+                                 LaneCount="4"
+                                 I2CDev="3"
+                                 I2CAddr="26"
+                                 DPhyFreq="1075000"
+                                 RefClock="25000"
+                                 Orientation="0"
+                                 RawFormat="GBRG"
+                                 CalibXml="IMX415.xml" />
+                        <Sensor2 Name="IMX415"
+                                 OutputWidth="3840"
+                                 OutputHeight="2160"
+                                 Bitdepth="12"
+                                 LaneCount="2"
+                                 I2CDev="3"
+                                 I2CAddr="26"
+                                 DPhyFreq="1075000"
+                                 RefClock="25000"
+                                 Orientation="0"
+                                 RawFormat="GBRG"
+                                 CalibXml="IMX415.xml" />
+                        </Sensors>
+                    </ISP>
+                </ISPSS>
+            </Devices>
+        </Board>
+    </Berlin>
+</Marvell>
+

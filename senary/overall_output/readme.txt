@@ -1,0 +1,6 @@
+这里的目录结构下两个修改文件作为参考
+主要是修改了构建rootfs的动作
+将一开始的基础rootfs拷贝，放到后面，即完整的sdk编译好后，再做拷贝
+先将完整的sdk编译好后，作为prebuild，放在知道目录
+然后拷贝基础rootfs到system
+接着从prebuild里面的ampsdk，拷贝出etc、lib、opt,并对第三方库文件的放置重新规划

@@ -1,0 +1,11 @@
+config BERLIN_AS470_A0
+        bool "BERLIN AS470 A0"
+
+config BERLIN_VS680_Z1
+        bool "BERLIN VS680 Z1"
+
+config BERLIN_VS640_A0
+        bool "BERLIN VS640 A0"
+
+config BERLIN_VS680_A0
+        bool "BERLIN VS680 A0"

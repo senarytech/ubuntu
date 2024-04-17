@@ -1,0 +1,44 @@
+{
+    "Inputs": {
+        "input_0": {
+            "name": "input",
+            "shape": [
+                1,
+                224,
+                224,
+                3
+            ],
+            "format": "nhwc",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 0.9921875,
+                "min_value": -1.0,
+                "scale": 0.0078125,
+                "zero_point": 128
+            },
+            "data_format": ""
+        }
+    },
+    "Outputs": {
+        "output_32": {
+            "name": "MobilenetV1/Predictions/Reshape_1",
+            "shape": [
+                1,
+                1001
+            ],
+            "format": "nhwc",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 0.99609375,
+                "min_value": 0.0,
+                "scale": 0.00390625,
+                "zero_point": 0
+            },
+            "data_format": "confidence_array class_index_base=-1"
+        }
+    },
+    "Recurrent_connections": {},
+    "secure": false
+}

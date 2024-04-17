@@ -1,0 +1,59 @@
+/* The detail description of each MACRO should be added in this document */
+
+CPU_ARCH
+    define the ARM architecture
+
+SDK_CROSS_COMPILE
+    use which compiler to build bootloader
+
+CONFIG_EMMC_V5
+    use the emmc drvier for emmc 5.x
+
+CONFIG_GPT
+    whether we use GPT
+
+CONFIG_DTB
+    whether linux use DTB
+
+CONFIG_ENABLE_DTBO
+    whether dtb overlay feature is enabled
+
+CONFIG_SSTZ
+    it's only for debug and FPGA verification
+
+CONFIG_APB_TIMER_DISABLE
+    used when apb timer is invalid
+
+DISABLE_CRASH_COUNTER
+    if crash counter is larger than 3, goto recovery(seems moved to miniloader)
+
+PV_COMP
+    used to adjust the voltage of vcpu/vcore according to leadge id
+
+CONFIG_FUNCTION_BUTTON_*
+    used to config function button
+
+CONFIG_SM
+    whether SM is presented
+
+CONFIG_TRUSTZONE
+    whether trustzone is used(all current products are using it)
+
+CONFIG_FASTLOGO
+    whether display fastlogo when chip bootup
+
+CONFIG_FASTLOGO_CVBS
+    another type of fastlogo display
+
+BOOTLOADER_DDR_START
+    start of memory address that bootloader is running
+
+BOOTLOADER_DDR_END
+    end of memory address that bootloader is running
+
+BOOTLOADER_DDR_BUF
+    it only be used when tz is not presended
+
+CPU0_START_ADDR
+    used to cusomize the kernel start address if no available memory layout from upper image
+

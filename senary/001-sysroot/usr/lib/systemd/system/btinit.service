@@ -1,0 +1,13 @@
+[Unit]
+Description=Senary bt server
+After=rc-local
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/bt_init.sh
+TimeoutSec=0
+RemainAfterExit=yes
+GuessMainPID=no
+
+[Install]
+WantedBy=multi-user.target

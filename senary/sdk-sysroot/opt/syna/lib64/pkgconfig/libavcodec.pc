@@ -1,0 +1,14 @@
+prefix=/home/wdy/ubuntu/opensource/syna-release/out/vs680_a0_ubuntu20_evk/target/ffmpeg
+exec_prefix=${prefix}
+libdir=/home/wdy/ubuntu/opensource/syna-release/out/vs680_a0_ubuntu20_evk/target/ffmpeg/lib
+includedir=/home/wdy/ubuntu/opensource/syna-release/out/vs680_a0_ubuntu20_evk/target/ffmpeg/include
+
+Name: libavcodec
+Description: FFmpeg codec library
+Version: 58.54.100
+Requires: 
+Requires.private: libavutil >= 56.31.100
+Conflicts:
+Libs: -L${libdir}  -lavcodec 
+Libs.private: -pthread -lm
+Cflags: -I${includedir}

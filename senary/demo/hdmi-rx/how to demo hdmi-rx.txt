@@ -1,0 +1,41 @@
+How to use HDMI-RX demo
+
+1.原理介绍
+
+AVIN 与VOUT component 直接关联，
+HDMI-RX进来的数据传输到VOUT，由VOUT 控制数据在屏幕上显示。
+为了给用户提供HDMI-RX数据的处理接口，由应用程序注册一个回调函数获取AVIN的数据，
+对数据做处理后在填充回底层共享内存中，最终显示出来处理后的效果。
+
+在ndi_avin.c 中增加了一个新的模式TEST_AVIN_OUPUT_COMP_VOUT_NT用来demo 上面的流程。
+可以查看相关的代码。
+
+代码中实现了两种处理AVIN callback数据的流程，打开AVIN_DEMO_SIMPLE 定义，
+在每次回调执行test_avin_avinVoutCB里面直接添加水印，在push回去由VOUT进行显示。
+
+如果对于数据帧处理的过程耗时比较久，可以关闭AVIN_DEMO_SIMPLE，
+此时会增加两个ringbuf A和B，avin callback数据先拷贝到A，然后进行处理，
+处理完填充到B，之后再将B的数据填充回底层共享内存，再显示出来。
+
+
+2. 编译说明
+先将senary/demo/hdmi-rx/demo_ampsdk 按照目录结构整合到ampsdk中进行编译,
+demo_build对应的ampsdk/build目录
+
+cd /workdir/syna-release/ampsdk //如有问题的话，可以先全编译一次
+source build/envsetup.sh
+make clean
+
+
+./build_component.sh ../sysroot/ubuntu20/data/rootfs_gui/ ../toolchain/aarch64/gcc-arm-aarch64-linux-gnu-8.3/bin/ linux_vs680_a0 ampclient_watermark
+
+
+3.运行操作
+运行前需要将ampsdk\amp\test\client_test\amp_watermark\lib 中的libtbb.so和libz.so
+拷贝到板子/opt/syna/lib64/,
+同时在lib64目录下创建一个软链接文件，ln -s libtbb.so libtbb.so.2
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/syna/lib64/
+然后执行 ampclient_watermark -m 7 即可
+
+4. 如果只是demo 录制HDMI RX数据到文件同时HDMI RX数据送到VOUT显示，
+可以执行 ampclient_watermark -m 7

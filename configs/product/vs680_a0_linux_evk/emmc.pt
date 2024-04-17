@@ -1,0 +1,18 @@
+#layout         partition_name          erase/format    first action    write_protection
+16M@16M         factory_setting         format          default         none
+1M              key_1st                 default         default         none
+7M              tzk_normal              default         default         none
+1M              key_2nd                 default         default         none
+7M              tzk_normalB             default         default         none
+16M             tzk_recovery            default         default         none
+16M             bl_recovery             default         default         none
+16M             recovery                erase           default         none
+16M             bl_normal               default         default         normal
+16M             bl_normalB              default         default         normal
+16M             boot                    default         default         normal
+800M            system                  default         default         normal
+16M             fastlogo                default         default         none
+16M             fastlogoB               default         default         none
+2M              devinfo                 erase           default         none
+2M              misc                    erase           default         none
+-               userdata                format          default         none

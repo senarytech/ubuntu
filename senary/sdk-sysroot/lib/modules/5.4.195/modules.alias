@@ -1,0 +1,9 @@
+# Aliases extracted from modules themselves.
+alias autofs autofs4
+alias fs-autofs autofs4
+alias devname:autofs autofs4
+alias char-major-10-235 autofs4
+alias platform:vs680_linux pvrsrvkm
+alias of:N*T*Cimg,powervrC* pvrsrvkm
+alias of:N*T*Cimg,powervr pvrsrvkm
+alias pci:v000014E4d*sv*sd*bc02sc80i* bcmdhd

@@ -1,0 +1,16 @@
+TEE_TOP_REL_PATH:= ../../../..
+TA_PATH		:= ../..
+TA_MODULE	:= libinvoke.ta
+
+TA_CFLAGS	:= -DCONFIG_TEE_LOG_ENABLE
+TA_CFLAGS	+= -DCONFIG_ANDROID_LOG
+TA_CFLAGS	+= -DCONFIG_LOG_FATAL
+TA_CFLAGS	+= -DCONFIG_LOG_ERROR
+TA_CFLAGS	+= -DCONFIG_LOG_HIGH
+TA_CFLAGS	+= -DCONFIG_LOG_INFO
+TA_LDFLAGS	:=
+TA_C_INCLUDES	:=
+TA_SRC_FILES	:= $(wildcard $(TA_PATH)/tee_ta_*.c)
+
+# must be in the end of file
+include $(TEE_TOP_REL_PATH)/build/tee_ta.mk

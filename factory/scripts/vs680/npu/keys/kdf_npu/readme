@@ -1,0 +1,11 @@
+2021/2/17
+
+1. put 16 bytes aes key file  in this folder
+
+2. edit config if needed(HEADER_VERSION, DEV_IMAGE_FLAG... etc)
+
+3. run npu_kdf.sh <input keyfile>
+
+4. get all keys from DIR_OUT=$PWD/out
+
+

@@ -1,0 +1,15 @@
+# Aliases for symbols, used by symbol_request().
+alias symbol:RGXHWPerfConnect pvrsrvkm
+alias symbol:dhd_wlan_resources bcmdhd
+alias symbol:RGXHWPerfReleaseEvents pvrsrvkm
+alias symbol:dhd_bus_check_driver_up bcmdhd
+alias symbol:RGXHWPerfDisconnect pvrsrvkm
+alias symbol:RGXHWPerfDisableCounters pvrsrvkm
+alias symbol:RGXHWPerfControl pvrsrvkm
+alias symbol:dhd_dongle_mem_dump bcmdhd
+alias symbol:RGXHWPerfConvertCRTimeStamp pvrsrvkm
+alias symbol:dhd_wlan_control bcmdhd
+alias symbol:RGXHWPerfConfigureAndEnableCounters pvrsrvkm
+alias symbol:RGXHWPerfConfigureAndEnableCustomCounters pvrsrvkm
+alias symbol:RGXHWPerfAcquireEvents pvrsrvkm
+alias symbol:dhd_wlan_power bcmdhd

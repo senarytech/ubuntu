@@ -1,0 +1,65 @@
+DEBUG=0
+
+CC=$(CROSS_COMPILE)gcc
+CXX=$(CROSS_COMPILE)g++
+INCLUDES=-I. -I$(VIVANTE_SDK_DIR)/include/ \
+ -I$(VIVANTE_SDK_DIR)/include/CL \
+ -I$(VIVANTE_SDK_DIR)/include/VX \
+ -I$(VIVANTE_SDK_DIR)/include/ovxlib
+CFLAGS=$(INCLUDES) -D__linux__ -DLINUX
+
+
+ifeq (1,$(SYNAP_ENABLE_CPU_PROFILING))
+CFLAGS+=-pg
+endif
+
+ifeq (1,$(DEBUG))
+CFLAGS+=-g
+else
+CFLAGS+=-O3
+endif
+
+
+ifeq (1,$(SYNAP_ENABLE_CPU_PROFILING))
+# Specifying full path to libovxlib.a otherwise shared library libovxlib.so
+# can be favored.
+# libovxlib.a contains bininaries resources, hence the whole-archive linking option.
+# libovxlib.a is repeated here because of cross-dependency with VSC
+LIBS+=-Wl,--whole-archive $(SYNAP_OVXLIB_DIR)/libovxlib.a -Wl,--no-whole-archive -lm \
+      $(SYNAP_OVXLIB_DIR)/libvxk_gen.a \
+      -L$(SYNAP_OVXLIB_DIR) -lVSC $(SYNAP_OVXLIB_DIR)/libovxlib.a \
+      -lmd5 -lCLC -lclCompiler -lclCommon -lclPreprocessor -lNNArchPerf -lArchModelSw \
+      -lz -lm -ldl -lpthread
+else
+LIBS+=-L$(SYNAP_OVXLIB_DIR) -lovxlib -lz
+endif
+
+
+SRCS=${wildcard *.c}
+SRCS+=${wildcard *.cpp}
+BIN=gen_nbg
+OBJS=$(addsuffix .o, $(basename $(SRCS)))
+
+.SUFFIXES: .cpp .c
+
+.cpp.o:
+	$(CC) $(CFLAGS) -c $<
+
+.cpp:
+	$(CXX) $(CFLAGS) $< -o $@ -lm
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+
+.c:
+	$(CC) $(CFLAGS) $< -o $@ -lm
+
+all: $(BIN)
+
+$(BIN): $(OBJS)
+	$(CC) $(CFLAGS) $(LFLAGS) $(EXTRALFLAGS) $(OBJS) $(LIBS) -o $@
+
+clean:
+	rm -rf *.o
+	rm -rf $(BIN)
+	rm -rf *~

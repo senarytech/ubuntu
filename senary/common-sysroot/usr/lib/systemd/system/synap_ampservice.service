@@ -1,0 +1,12 @@
+[Unit]
+Description=start ampservice
+Conflicts=shutdown.target
+Before=shutdown.target display-manager.service
+
+[Service]
+ExecStart=/opt/syna/bin/ampservice.sh
+Type=forking
+TimeoutSec=90s
+
+[Install]
+WantedBy=graphical.target

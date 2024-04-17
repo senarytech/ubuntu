@@ -1,0 +1,78 @@
+{
+    "root" : [
+        {
+            "classname" : "Aev1",
+            "enable" : false
+        },
+        {
+            "classname" : "Aev2",
+            "enable" : false,
+            "motionThreshold" : 0.5,
+            "roiWeight" : 0.6,
+            "motionFilter"  : 0.5,
+            "maxSensorAgain" : 15.5,
+            "maxSensorDgain" : 1,
+            "maxIspDgain" : 12 
+        },
+        {
+            "classname" : "Aehdr",
+            "enable" : false,
+            "motionThreshold" : 0.5,
+            "roiWeight" : 0.6,
+            "motionFilter"  : 0.5,
+            "maxSensorAgain" : 15.5,
+            "maxSensorDgain" : 1,
+            "maxIspDgain" : 12 
+        },
+        {
+            "classname" : "AdaptiveAe",
+            "enable" : true,
+            "motionThreshold" : 0.7,
+            "roiWeight" : 0.6,
+            "motionFilter"  : 0.5,
+            "targetFilter"  : 0.5,
+            "wdrContrast.min" : 10,
+            "wdrContrast.max" : 110,
+            "lowlight" : {
+                "linear_repress" : [1, 0.8, 0.6, 0.4, 0.4],
+                "linear_gain" : [4, 8, 16, 32, 100],
+                "hdr_repress" : [1, 0.8, 0.8, 0.8, 0.8],
+                "hdr_gain" : [4, 8, 16, 32, 100]
+            },
+            "maxSensorAgain" : 15.5,
+            "maxSensorDgain" : 12,
+            "maxIspDgain" : 1
+        },
+        {
+            "classname" : "Awbv2",
+            "enable" : true,
+            "illuorder" : "A, D50, D65, D75, TL84, F12, CWF",
+            "indoor" : [1, 1, 1, 1, 1, 1, 1],
+            "outdoor" : [1, 1, 1, 1, 1, 1, 1],
+            "transition" : [1, 1, 1, 1, 1, 1, 1],
+            "avg" : 0.0
+        },
+        {
+            "classname" : "IspController",
+            "enable" : true
+        },
+        {
+            "classname" : "AutoHdr",
+            "enable" : true
+        },
+        {
+            "classname" : "DciHist",
+            "enable" : false,
+            "gaussMeanPos" : 64,
+            "gaussSigmaPos" : 128,
+            "gaussAmpPos" : 1.0,
+            "gaussMeanNeg" : 0,
+            "gaussSigmaNeg" : 128,
+            "gaussAmpNeg" : 1.0
+        },
+        {
+            "classname" : "SensorController",
+            "enable" : true
+        }
+    ]
+}

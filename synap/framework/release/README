@@ -1,0 +1,21 @@
+Prerequirements
+---------------
+
+1. install cmake
+2. VSSDK installation
+
+
+Build steps
+-----------
+
+mkdir build
+cd build
+cmake .. -DVSSDK_DIR=/path/to/vssdk
+make install
+
+
+Push binaries
+---------------------
+
+adb push install/lib/* /vendor/lib
+adb push install/bin/* /vendor/bin

@@ -1,0 +1,206 @@
+#############
+# Functions #
+#############
+compile_amp() {
+  # Set up environment
+  source build/envsetup.rc
+  lunchproduct
+
+  # Run build
+  if [ is"${1}" = "isclean" ]; then
+    make -C ${basedir_amp} clean
+  else
+    ca_cflag=${CONFIG_TOOLCHAIN_APPLICATION_CFLAG}
+    ca_ld_flag=${CONFIG_TOOLCHAIN_APPLICATION_LDFLAG}
+
+    TARGET_OS=${1}
+    toolchain=${2}
+    # libteec.so
+    ca_ld_flag="${ca_ld_flag} -L${CONFIG_SYNA_SDK_OUT_TARGET_PATH}/${CONFIG_TEE_CLIENT_REL_PATH}/lib/${toolchain}"
+    ta_cflag=${CONFIG_TOOLCHAIN_TA_CFLAG}
+    ta_ldflag=${CONFIG_TOOLCHAIN_TA_LDFLAG}
+
+    make -j ${CONFIG_CPU_NUMBER} \
+         -C ${basedir_amp} \
+         CA_TOOLS_PREFIX="${toolchain}" \
+         E_CFLAG="${ca_cflag}" \
+         E_CPPFLAG="${CONFIG_TOOLCHAIN_APPLICATION_CPPFLAG}" \
+         E_LDFLAG="${ca_ld_flag}" \
+         TA_TOOLS_PREFIX="${CONFIG_TOOLCHAIN_TA}" \
+         E_TA_CFLAG="${ta_cflag}" \
+         E_TA_LDFLAG="${ta_ldflag}" \
+         E_TA_OBJ="${CONFIG_TOOLCHAIN_TA_OBJ_FILES}" \
+         TARGET_OS="${TARGET_OS}" \
+         CC_NAME="${CONFIG_TOOLCHAIN_APPLICATION_CC}" \
+         CLG_CFLAG="${CONFIG_TOOLCHAIN_CLANG_CFLAG}" \
+         CLG_LDFLAG="${CONFIG_TOOLCHAIN_CLANG_LDFLAG}"
+  fi
+}
+
+#only for 64bit version amp in which amp client side is 64bit while amp server is still 32bit
+compile_amp_client() {
+  # Set up environment
+  source build/envsetup.rc
+  lunchproduct
+
+  AMP_MAKE_TARGETS="libgraphics libampgtest libtunerdemod libsm ampclient_avsettings amp_transcode ampclient_alpha ampclient_pvr ampclient_samples ampdiag test_cecsvs"
+  # Run build
+  if [ is"${1}" = "isclean" ]; then
+    rm -fr ${AMP_WORK_DIR}_client
+    mv ${AMP_WORK_DIR} ${AMP_WORK_DIR}_client
+    make -C ${basedir_amp} clean
+    make -C ${topdir} ffmpeg-clean && rm -fr ${topdir}/out/${CONFIG_PRODUCT_NAME}/target/ffmpeg
+  else
+    ca_cflag=${CONFIG_TOOLCHAIN_APPLICATION_CFLAG}
+    ca_ld_flag=${CONFIG_TOOLCHAIN_APPLICATION_LDFLAG}
+
+    TARGET_OS=${1}
+    toolchain=${2}
+    # libteec.so
+    ca_ld_flag="${ca_ld_flag} -L${CONFIG_SYNA_SDK_OUT_TARGET_PATH}/${CONFIG_TEE_CLIENT_REL_PATH}/lib/${toolchain}"
+    ta_cflag=${CONFIG_TOOLCHAIN_TA_CFLAG}
+    ta_ldflag=${CONFIG_TOOLCHAIN_TA_LDFLAG}
+    make -C ${topdir} tee
+    make -C ${topdir} ffmpeg-clean && rm -fr ${topdir}/out/${CONFIG_PRODUCT_NAME}/target/ffmpeg
+    make -C ${topdir} ffmpeg
+
+    make -j ${CONFIG_CPU_NUMBER} \
+         -C ${basedir_amp} \
+         CA_TOOLS_PREFIX="${toolchain}" \
+         E_CFLAG="${ca_cflag}" \
+         E_CPPFLAG="${CONFIG_TOOLCHAIN_APPLICATION_CPPFLAG}" \
+         E_LDFLAG="${ca_ld_flag}" \
+         TA_TOOLS_PREFIX="${CONFIG_TOOLCHAIN_TA}" \
+         E_TA_CFLAG="${ta_cflag}" \
+         E_TA_LDFLAG="${ta_ldflag}" \
+         E_TA_OBJ="${CONFIG_TOOLCHAIN_TA_OBJ_FILES}" \
+         TARGET_OS="${TARGET_OS}" \
+         CC_NAME="${CONFIG_TOOLCHAIN_APPLICATION_CC}" \
+         CLG_CFLAG="${CONFIG_TOOLCHAIN_CLANG_CFLAG}" \
+         CLG_LDFLAG="${CONFIG_TOOLCHAIN_CLANG_LDFLAG}" \
+              ${AMP_MAKE_TARGETS}
+  fi
+}
+
+#only for 64bit prebuild amp in which amp client side is 64bit while amp server is still 32bit
+compile_amp_client_dependence_only() {
+  # Set up environment
+
+  # Run build
+  if [ is"${1}" = "isclean" ]; then
+    make -C ${topdir} ffmpeg-clean && rm -fr ${topdir}/out/${CONFIG_PRODUCT_NAME}/target/ffmpeg
+  else
+    # libteec.so
+    make -C ${topdir} tee
+
+    make -C ${topdir} ffmpeg-clean && rm -fr ${topdir}/out/${CONFIG_PRODUCT_NAME}/target/ffmpeg
+    make -C ${topdir} ffmpeg
+  fi
+}
+
+compile_amp_server() {
+  # Set up environment
+  CONFIG_TOOLCHAIN_APPLICATION="arm-linux-gnueabihf-"
+  CONFIG_TOOLCHAIN_APPLICATION_CC="arm-linux-gnueabihf-gcc"
+  cp -fr ../build/.config ../build/.config_64
+  sed -i 's/CONFIG_TOOLCHAIN_APPLICATION_CC="aarch64-linux-gnu-gcc"/CONFIG_TOOLCHAIN_APPLICATION_CC="arm-linux-gnueabihf-gcc"/g' ../build/.config
+  sed -i 's/CONFIG_TOOLCHAIN_APPLICATION="aarch64-linux-gnu-"/CONFIG_TOOLCHAIN_APPLICATION="arm-linux-gnueabihf-"/g' ../build/.config
+  source ${topdir}/build/module/toolchain/${CONFIG_TOOLCHAIN_APPLICATION}.rc
+  source build/envsetup.rc
+  lunchproduct
+  AMP_MAKE_TARGETS="ampservice libisp libispbe libdrmclient libedid AmpPipeTest AmpUnitTest ampclient_customer ampdmxtest ampdmxutil AmpIPControlTest test_drm_ipctl test_disp ampdiag mdb"
+  # Run build
+  if [ is"${1}" = "isclean" ]; then
+    rm -fr ${AMP_WORK_DIR}_server
+    mv ${AMP_WORK_DIR} ${AMP_WORK_DIR}_server
+    make -C ${basedir_amp} clean
+    make -C ${topdir} tee-clean
+    make -C ${topdir} ffmpeg-clean && rm -fr ${topdir}/out/${CONFIG_PRODUCT_NAME}/target/ffmpeg
+  else
+    ca_cflag=${CONFIG_TOOLCHAIN_APPLICATION_CFLAG}
+    ca_ld_flag=${CONFIG_TOOLCHAIN_APPLICATION_LDFLAG}
+
+    TARGET_OS=${1}
+    toolchain=${2}
+    # libteec.so
+    ca_ld_flag="${ca_ld_flag} -L${CONFIG_SYNA_SDK_OUT_TARGET_PATH}/${CONFIG_TEE_CLIENT_REL_PATH}/lib/${toolchain}"
+    ta_cflag=${CONFIG_TOOLCHAIN_TA_CFLAG}
+    ta_ldflag=${CONFIG_TOOLCHAIN_TA_LDFLAG}
+
+    make -C ${topdir} tee-clean
+    make -C ${topdir} tee ffmpeg
+    make -j ${CONFIG_CPU_NUMBER} \
+         -C ${basedir_amp} \
+         CA_TOOLS_PREFIX="${toolchain}" \
+         E_CFLAG="${ca_cflag}" \
+         E_CPPFLAG="${CONFIG_TOOLCHAIN_APPLICATION_CPPFLAG}" \
+         E_LDFLAG="${ca_ld_flag}" \
+         TA_TOOLS_PREFIX="${CONFIG_TOOLCHAIN_TA}" \
+         E_TA_CFLAG="${ta_cflag}" \
+         E_TA_LDFLAG="${ta_ldflag}" \
+         E_TA_OBJ="${CONFIG_TOOLCHAIN_TA_OBJ_FILES}" \
+         TARGET_OS="${TARGET_OS}" \
+         CC_NAME="${CONFIG_TOOLCHAIN_APPLICATION_CC}" \
+         CLG_CFLAG="${CONFIG_TOOLCHAIN_CLANG_CFLAG}" \
+         CLG_LDFLAG="${CONFIG_TOOLCHAIN_CLANG_LDFLAG}" \
+         ${AMP_MAKE_TARGETS}
+  fi
+  mv  ../build/.config_64 ../build/.config
+  CONFIG_TOOLCHAIN_APPLICATION="aarch64-linux-gnu-"
+  CONFIG_TOOLCHAIN_APPLICATION_CC="aarch64-linux-gnu-gcc"
+  source ${topdir}/build/module/toolchain/${CONFIG_TOOLCHAIN_APPLICATION}.rc
+}
+
+compile_amp_server_dependence_only() {
+  # Set up environment
+  CONFIG_TOOLCHAIN_APPLICATION="arm-linux-gnueabihf-"
+  CONFIG_TOOLCHAIN_APPLICATION_CC="arm-linux-gnueabihf-gcc"
+  cp -fr ../build/.config ../build/.config_64
+  sed -i 's/CONFIG_TOOLCHAIN_APPLICATION_CC="aarch64-linux-gnu-gcc"/CONFIG_TOOLCHAIN_APPLICATION_CC="arm-linux-gnueabihf-gcc"/g' ../build/.config
+  sed -i 's/CONFIG_TOOLCHAIN_APPLICATION="aarch64-linux-gnu-"/CONFIG_TOOLCHAIN_APPLICATION="arm-linux-gnueabihf-"/g' ../build/.config
+  source ${topdir}/build/module/toolchain/${CONFIG_TOOLCHAIN_APPLICATION}.rc
+
+  # Run build
+  if [ is"${1}" = "isclean" ]; then
+    make -C ${topdir} tee-clean
+    make -C ${topdir} ffmpeg-clean && rm -fr ${topdir}/out/${CONFIG_PRODUCT_NAME}/target/ffmpeg
+  else
+    # libteec.so
+    make -C ${topdir} tee-clean
+    make -C ${topdir} tee ffmpeg
+  fi
+  mv  ../build/.config_64 ../build/.config
+  CONFIG_TOOLCHAIN_APPLICATION="aarch64-linux-gnu-"
+  CONFIG_TOOLCHAIN_APPLICATION_CC="aarch64-linux-gnu-gcc"
+  source ${topdir}/build/module/toolchain/${CONFIG_TOOLCHAIN_APPLICATION}.rc
+}
+
+create_autoconfig() {
+    [ $# -ne 3 ] && echo "Bad input parameters: outdir config_file release" && exit 1
+    outdir=$1
+    config_f=$2
+    rel=$3
+    if [ "is${rel}" = "isy" ]; then
+        kconfig_file=module/ampsdk/Kconfig.feature
+    else
+        kconfig_file=module/ampsdk/Kconfig.build.dep
+    fi
+
+    tmp_config=${outdir}/config
+    mkdir -p ${outdir}
+    cp ${config_f} ${tmp_config}
+    # Call oldnoconfig to set new symbols w/o interactive prompts. Note
+    # oldnoconfig name is misleading, it does not set new symbols to "n" but
+    # instead sets to default values.
+    make RELEASE=${rel} -C build -f Makefile.config oldnoconfig KBUILD_KCONFIG=${kconfig_file} KCONFIG_CONFIG=${tmp_config} KCONFIG_AUTOHEADER=${outdir}/autoconf.h
+    make RELEASE=${rel} -C build -f Makefile.config silentoldconfig KBUILD_KCONFIG=${kconfig_file} KCONFIG_CONFIG=${tmp_config} KCONFIG_AUTOHEADER=${outdir}/autoconf.h
+
+    [ -d "${basedir_amp}/products/profiles" ] && rm -rf ${basedir_amp}/products/profiles
+    if [ "is${rel}" != "isy" ] && [ "is${CONFIG_AMP_BACKUP_PROFILE}" = "isy" ]; then
+        mkdir -p ${basedir_amp}/products/profiles
+        cp ${outdir}/autoconf.h ${basedir_amp}/products/profiles/${CONFIG_AMP_PROFILE}
+    fi
+
+    rm ${tmp_config}
+    rm -r build/include
+}

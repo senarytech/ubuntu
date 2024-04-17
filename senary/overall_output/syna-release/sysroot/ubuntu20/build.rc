@@ -1,0 +1,54 @@
+#############
+# Functions #
+#############
+
+copy_files() {
+  local srcdir
+  local basedir_dst
+  local subdir_dst
+
+  srcdir=$1; shift
+  basedir_dst=$1; shift
+  subdir_dst=$1; shift
+
+  [ "x${srcdir}" != "x" ]
+  [ "x${basedir_dst}" != "x" ]
+  [ "x${subdir_dst}" != "x" ]
+
+  [ -e ${srcdir} ]
+
+  mkdir -p ${basedir_dst}/${subdir_dst}
+
+  cp -ad ${srcdir}/. ${basedir_dst}/${subdir_dst}/.
+}
+
+########
+# Main #
+########
+### Absolute path of related directories ###
+build_topdir=${mod_dir}/ubuntu20
+build_sysroot=${CONFIG_SYNA_SDK_OUT_TARGET_PATH}/${runtime_sysroot}
+build_system=${CONFIG_SYNA_SDK_OUT_TARGET_PATH}/system
+runtime_rel=${CONFIG_SYNA_SDK_OUT_TARGET_PATH}/${CONFIG_RUNTIME_REL_PATH}
+runtime_intermediate=${runtime_rel}/intermediate
+chip_dir=${mod_dir}/${runtime_dir}/chip/${syna_chip_name}
+
+### Copy RAMDISK files ###
+rm -fr ${runtime_intermediate}/ramdisk
+copy_files ${build_topdir}/data/ramdisk ${runtime_intermediate} ramdisk
+
+# Copy ROOT filesystem files
+rm -fr ${build_topdir}/out/vs680_a0_linux_evk/target/system/lib
+#copy_files ${build_topdir}/data/rootfs ${build_system} .
+copy_files ${build_topdir}/data/sysroot ${build_sysroot} .
+
+# export CI build number to etc
+echo ${BUILD_NUMBER} >> ${build_system}/etc/buildnumber
+
+# Update chip info
+#sed -i "s/chip_name/${syna_chip_name}/g" ${build_system}/etc/issue
+
+# chip specific
+if [ -f ${chip_dir}/chip.rc ]; then
+    source ${chip_dir}/chip.rc
+fi

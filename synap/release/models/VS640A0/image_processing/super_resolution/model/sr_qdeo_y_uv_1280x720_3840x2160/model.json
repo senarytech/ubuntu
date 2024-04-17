@@ -1,0 +1,88 @@
+{
+    "Inputs": {
+        "input_0": {
+            "name": "input_2",
+            "shape": [
+                1,
+                360,
+                640,
+                2
+            ],
+            "format": "nhwc",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 0.9921875,
+                "min_value": -1.0,
+                "scale": 0.0078125,
+                "zero_point": 128
+            },
+            "data_format": "uv8",
+            "security": "any"
+        },
+        "input_1": {
+            "name": "lambda/truediv",
+            "shape": [
+                1,
+                720,
+                1280,
+                1
+            ],
+            "format": "nhwc",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 0.9921875,
+                "min_value": -1.0,
+                "scale": 0.0078125,
+                "zero_point": 128
+            },
+            "data_format": "y8",
+            "security": "any"
+        }
+    },
+    "Outputs": {
+        "output_13": {
+            "name": "ResizeBilinear",
+            "shape": [
+                1,
+                1080,
+                1920,
+                2
+            ],
+            "format": "nhwc",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 0.9921875,
+                "min_value": -1.0,
+                "scale": 0.0078125,
+                "zero_point": 128
+            },
+            "data_format": "uv8",
+            "security": "secure-if-input-secure"
+        },
+        "output_14": {
+            "name": "add/add",
+            "shape": [
+                1,
+                2160,
+                3840,
+                1
+            ],
+            "format": "nhwc",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 0.9921875,
+                "min_value": -1.0,
+                "scale": 0.0078125,
+                "zero_point": 128
+            },
+            "data_format": "y8",
+            "security": "secure-if-input-secure"
+        }
+    },
+    "Recurrent_connections": {},
+    "secure": true
+}

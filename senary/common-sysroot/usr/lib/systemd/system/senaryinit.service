@@ -1,0 +1,15 @@
+[Unit]
+Description=init task
+ConditionPathExists=/usr/bin/runonce.sh
+Before=rc-local.service
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/runonce.sh
+TimeoutSec=0
+RemainAfterExit=no
+GuessMainPID=no
+
+[Install]
+WantedBy=multi-user.target
+

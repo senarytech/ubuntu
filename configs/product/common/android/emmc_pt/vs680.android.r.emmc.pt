@@ -1,0 +1,31 @@
+# MUST know before modifying this partition table:
+# 1. need to apply factory flow patch that provided by Synaptics.
+# 2. emmc write protection feature would not be enabled.
+#layout         partition_name          erase/format    first action    write_protection
+16M@16M         factory_setting         default         default         none
+1M              key_a                   default         default         none
+7M              fastboot_a              default         default         none
+8M              tzk_a                   default         default         none
+1M              key_b                   default         default         none
+7M              fastboot_b              default         default         none
+8M              tzk_b                   default         default         none
+32M             bl_a                    default         default         none
+32M             bl_b                    default         default         none
+16M             fastlogo_a              default         default         none
+16M             fastlogo_b              default         default         none
+32M             boot_a                  default         default         none
+32M             boot_b                  default         default         none
+32M             vendor_boot_a           default         default         none
+32M             vendor_boot_b           default         default         none
+8M              dtbo_a                  default         default         none
+8M              dtbo_b                  default         default         none
+4M              vbmeta_a                default         default         none
+4M              vbmeta_b                default         default         none
+4M              vbmeta_system_a         default         default         none
+4M              vbmeta_system_b         default         default         none
+4496M           super                   default         default         none
+2M              misc                    erase           default         none
+4M              fts                     erase           default         none
+2M              frp                     erase           default         none
+32M             metadata                format          default         none
+-               userdata                default         default         none

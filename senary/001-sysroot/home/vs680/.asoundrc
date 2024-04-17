@@ -1,0 +1,74 @@
+pcm.hdmi_node {
+  type dmix
+  ipc_key 3235
+  ipc_key_add_uid false   # let multiple users share
+  ipc_perm 0666           # IPC permissions for multi-user sharing (octal, default 0600)
+  slave {
+    pcm "hw:0,9"
+    rate 48000
+    format S32_LE
+    channels 2
+    period_size 256
+    buffer_size 2048
+  }
+}
+
+pcm.hdmi_out {
+    type plug
+    slave {
+      pcm "hdmi_node"
+    }
+}
+
+pcm.speaker_out {
+    type plug
+    slave {
+      pcm "speaker_node"
+    }
+}
+
+pcm.speaker_node {
+  type dmix
+  ipc_key 3234
+  ipc_key_add_uid false   # let multiple users share
+  ipc_perm 0666           # IPC permissions for multi-user sharing (octal, default 0600)
+  slave {
+    pcm "hw:0,0"
+    rate 48000
+    format S32_LE
+    channels 2
+    period_size 256
+    buffer_size 2048
+  }
+}
+
+pcm.capture_node {
+  type plug
+  slave {
+    pcm "hw:0,2"
+    rate 48000
+    channels 2
+    format S32_LE
+  }
+}
+
+pcm.master {
+  type asym
+  capture.pcm {
+    type plug
+    slave{
+                pcm "capture_node"
+    }
+  }
+  playback.pcm {
+    type plug
+    slave {
+      pcm "speaker_out"
+    }
+  }
+}
+
+pcm.!default {
+  type plug
+  slave.pcm "master"
+}

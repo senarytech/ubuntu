@@ -1,0 +1,2 @@
+/home/don/Dq/NPU/Synaptics_Git_Ext_VSSDK-1.10.1-lts/aarch64/gcc-arm-aarch64-linux-gnu-8.3/bin/aarch64-linux-gnu-ar qc libsynap_utils.a CMakeFiles/synap_utils.dir/src/file_utils.cpp.o CMakeFiles/synap_utils.dir/src/string_utils.cpp.o
+/home/don/Dq/NPU/Synaptics_Git_Ext_VSSDK-1.10.1-lts/aarch64/gcc-arm-aarch64-linux-gnu-8.3/bin/aarch64-linux-gnu-ranlib libsynap_utils.a

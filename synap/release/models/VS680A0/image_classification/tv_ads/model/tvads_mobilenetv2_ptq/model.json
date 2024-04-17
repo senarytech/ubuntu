@@ -1,0 +1,44 @@
+{
+    "Inputs": {
+        "input_0": {
+            "name": "mobilenetv2_1_00_224_input",
+            "shape": [
+                1,
+                224,
+                224,
+                3
+            ],
+            "format": "nhwc",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 0.9921875,
+                "min_value": -1.0,
+                "scale": 0.0078125,
+                "zero_point": 128
+            },
+            "data_format": ""
+        }
+    },
+    "Outputs": {
+        "output_108": {
+            "name": "Identity",
+            "shape": [
+                1,
+                4
+            ],
+            "format": "nhwc",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 0.99609375,
+                "min_value": 0.0,
+                "scale": 0.00390625,
+                "zero_point": 0
+            },
+            "data_format": ""
+        }
+    },
+    "Recurrent_connections": {},
+    "secure": false
+}

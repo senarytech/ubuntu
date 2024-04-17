@@ -1,0 +1,35 @@
+### Image Name ###
+Imgs=(TA_ROOT_CERT TA_CERT MODEL)
+
+### Image Type Value ###
+IMAGE_TYPE_TA_ROOT_CERT=0x00000019
+IMAGE_TYPE_TA_CERT=0x0000001A
+IMAGE_TYPE_MODEL=0x00000071
+
+### 2 bytes Level i ###
+LEVEL=0x0001
+
+### 4 bytes Header Version ###
+HEADER_VERSION=0x00000000
+
+### Development Image Flag ###
+DEV_IMAGE_FLAG=0x00
+
+### TA_VENDOR_GID
+TA_VENDOR_GID=0x00000001
+
+### Context ###
+CONTEXT0_3=0x00000101
+CONTEXT4_7=0x00000000
+
+### 2 bytes desired number of bits that is used to get MDK_xxx key ###
+DESIRED_NUM=0x0080
+
+### MDK file ###
+#F_MDK=$PWD/aes.bin
+
+### output folder ###
+DIR_OUT=$PWD/out
+
+### print message flag ###
+PRINT_INFO=1

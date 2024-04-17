@@ -1,0 +1,6 @@
+[security_version]
+extrsak_store = 0
+image_signing = 0
+
+[signing_tool]
+security_version_style = mask

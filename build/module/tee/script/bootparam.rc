@@ -1,0 +1,25 @@
+### Generate TZ Boot Parameters
+
+pushd ${module_topdir}
+
+### by default, boot with tee is enabled
+make PLATFORM=${syna_chip_name}/${tz_memlayout} BERLIN_CHIP=${syna_chip_name} -C ${module_topdir}/tools/gen_boot_param clean
+make PLATFORM=${syna_chip_name}/${tz_memlayout} BERLIN_CHIP=${syna_chip_name} -C ${module_topdir}/tools/gen_boot_param
+${module_topdir}/tools/gen_boot_param/gen_boot_param ${opt_outdir_intermediate}/bootparam.bin
+${module_topdir}/tools/gen_boot_param/gen_boot_param_recovery ${opt_outdir_intermediate}/bootparam_recovery.bin
+
+if [ ${tz_rel_ver} == 2 ]; then
+  source ${module_build_topdir}/script/common.rc
+  gen2_secure_image bparam ${opt_outdir_intermediate}/bootparam.bin ${opt_outdir_intermediate}/bootparam_en.bin
+  gen2_secure_image bparam ${opt_outdir_intermediate}/bootparam_recovery.bin ${opt_outdir_intermediate}/bootparam_recovery_en.bin
+fi
+
+if [ ${tz_rel_ver} == genx ]; then
+  source ${module_build_topdir}/script/common.rc
+  source ${module_build_topdir}/script/parse_addr.rc
+  ${security_tools_path}in_extras.py "TZK_BOOT_PARAMETER" ${opt_outdir_intermediate}/boot_param_extras.bin 0x00000000 ${tzbp_addr}
+  genx_secure_image "TZK_BOOT_PARAMETER" ${opt_outdir_intermediate}/boot_param_extras.bin 0x0 ${opt_outdir_intermediate}/bootparam.bin ${opt_outdir_intermediate}/bootparam_en.bin
+  genx_secure_image "TZK_BOOT_PARAMETER" ${opt_outdir_intermediate}/boot_param_extras.bin 0x0 ${opt_outdir_intermediate}/bootparam_recovery.bin ${opt_outdir_intermediate}/bootparam_recovery_en.bin
+fi
+
+popd

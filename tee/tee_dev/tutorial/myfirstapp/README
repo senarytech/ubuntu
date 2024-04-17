@@ -1,0 +1,30 @@
+1. how to build myfirstapp (CA)
+
+    cd $VSSDK/tee/tee_dev/tutorial/myfirstapp/build/ca
+    make
+
+    note: you may need to add armv7a-cros-linux-gnueabi- toolchain in your PATH
+    export PATH=$PATH:$VSSDK/toolchain/aarch32/armv7a-cros-linux-gnueabi-4.9/bin/
+
+2. how to build libsample.ta.clear TA (it's a clear TA)
+
+    cd $VSSDK/tee/tee_dev/tutorial/myfirstapp/build/ta
+    make
+
+    note: you may need to add arm-eabi- toolchain in your PATH
+    export PATH=$PATH:$VSSDK/toolchain/aarch32/gcc-linaro-arm-eabi-6.2.1/bin/
+
+3. how to use test key to encrypt libsample.ta.clear
+
+   cd $VSSDK/factory/scripts/bg5ct/ta_encryption/vendor_ta/sample
+   ../bin/vendor_ta_encryption -i $YOURPATH/libsample.ta.clear -R TA_Root_Cert.rcert -m signing_test.cfg -C CustKey.bin -S ExtRsaKey.pem -o $YOURPATH/libsample.ta
+
+   note: these keys and cert file in VSSDK are for testing only, do not use them for production
+
+4. how to run myfirstapp
+   1) flash ROMK image into a Synaptics board and boot up it
+   2) copy myfirstapp and libsample.ta to /data
+   3) cd data
+   4) ./myfirstapp libsample.ta
+   5) CA will load TA and inoke a command, you can see below message:
+      succeed to invoke command 0x00000000

@@ -1,0 +1,85 @@
+#
+
+# For a description of the syntax of this configuration file,
+# see Documentation/kbuild/kconfig-language.txt.
+#
+menu "External Bootloader Configuration"
+depends on EXTERNAL_BOOTLOADER
+
+config BL_REL_PATH
+	string
+	default "external_bootloader"
+	help
+		Used as ${CONFIG_SYNA_SDK_OUT_TARGET_PATH}/${CONFIG_BL_REL_PATH}
+
+menuconfig BL_PRELOAD_TA
+	bool "Preload TA"
+	default y
+	help
+		Some TA will be loaded by bootloader in early stage to use TA feature
+		before linux file system is ready.
+
+if BL_PRELOAD_TA
+
+config BL_TA_FASTLOGO
+	depends on BL_PRELOAD_TA && BL_FASTLOGO
+	bool "fastlogo ta"
+	default y
+
+config BL_TA_KEYMASTER
+	depends on BL_PRELOAD_TA
+	bool "keymaster ta"
+	default y
+
+config TA_KEYMASTER_V4
+	depends on BL_TA_KEYMASTER
+	bool "keymaster v4"
+	default n
+
+endif
+
+config BL_CPUPLL
+	string "CPUPLL (800, 1200, 1500, etc.)"
+	default "800"
+	help
+		dynamicly change the cpu pll in bootloader
+
+config BL_FASTLOGO
+	bool "Fastlogo"
+	default y
+	help
+		display fastlogo when system is booting up
+
+config BL_RPMB
+        bool "RPMB"
+        default y
+        help
+                Replay Protected Memory Block is for trusted storage
+
+config BL_SYSTEM_AS_ROOT
+	depends on ANDROID_OS && PREBOOT_BOOTFLOW_NR
+	bool "System as Root"
+	default n
+	help
+		config to enable system as root
+
+config BL_DTB
+	bool "DTB Modify"
+	default y
+	help
+		config to enable dtb modification for kernel params
+
+config BL_RECOVERY_DTBO
+	depends on ANDROID_OS && PREBOOT_BOOTFLOW_NR
+	bool "DTBO for Recovery"
+	default n
+	help
+		config to enable recovery dtbo
+
+config BL_PV_COMP
+	bool "PV Compensation"
+	default y
+	help
+		the pv comp is used to control cpu voltage and transfer pv table
+
+endmenu

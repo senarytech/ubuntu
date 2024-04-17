@@ -1,0 +1,29 @@
+path-constant top : . ;
+
+import modules ;
+import path ;
+import os ;
+local boost-root = [ modules.peek : BOOST_ROOT ] ;
+
+if $(boost-root)
+{
+    .sroot = [ MATCH --sysroot=(.*) : [ modules.peek : ARGV ] ] ;
+    .target = [ MATCH --target=(.*) : [ modules.peek : ARGV ] ] ;
+    ECHO "sysroot " $(.sroot) ;
+    ECHO "target " $(.target) ;
+
+    using clang : arm : clang++ :
+        <linkflags>--sysroot=$(.sroot)
+        <linkflags>--target=$(.target)
+        <linkflags>-fuse-ld=lld
+        <linkflags>-L$(.sroot)/usr/lib
+        <linkflags>-Wl,-soname=libboost_system.so
+        <compileflags>--sysroot=$(.sroot)
+        <compileflags>--target=$(.target)
+        ;
+}
+else
+{
+    ECHO "Warning: couldn't find BOOST_ROOT " ;
+}
+

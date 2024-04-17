@@ -1,0 +1,84 @@
+/*******************************************************************************
+ * Copyright (C) Marvell International Ltd. and its affiliates
+ *******************************************************************************
+ * Marvell GPL License Option
+ *
+ * If you received this File from Marvell, you may opt to use, redistribute and/or
+ * modify this File in accordance with the terms and conditions of the General
+ * Public License Version 2, June 1991 (the "GPL License"), a copy of which is
+ * available along with the File in the license.txt file or by writing to the Free
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 or
+ * on the worldwide web at http://www.gnu.org/licenses/gpl.txt.
+ *
+ * THE FILE IS DISTRIBUTED AS-IS, WITHOUT WARRANTY OF ANY KIND, AND THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE ARE EXPRESSLY
+ * DISCLAIMED.  The GPL License provides additional details about this warranty
+ * disclaimer.
+ *******************************************************************************/
+/*
+ * bootloader memory layout:
+ *  CONFIG_BL_DDR_START - (CONFIG_BL_DDR_START + 0x4000) 	16kB for level 1 translation table base
+ *  (CONFIG_BL_DDR_START + 0x4000) - (CONFIG_BL_DDR_START + 0x8000) 16kb buff of bl_boot_arg from miniloader
+ *  (CONFIG_BL_DDR_START + 0x8000) - (CONFIG_BL_DDR_END - 0x4000) code, rodata, data, bss, heap. stack
+ *  (CONFIG_BL_DDR_END - 0x4000) - CONFIG_BL_DDR_END 		16kB for irq_stack
+ *
+ *******************************************************************************/
+
+OUTPUT_FORMAT("elf32-littlearm", "elf32-littlearm", "elf32-littlearm")
+OUTPUT_ARCH(arm)
+ENTRY(BootLoaderEntry)
+SECTIONS
+{
+	. = CONFIG_BL_DDR_BUF;
+	__bootloader_buf_start = .;
+
+	. = CONFIG_BL_DDR_START;
+	. = ALIGN(0x4000);
+	__ttb_base_start = .;
+
+	. = CONFIG_BL_DDR_START + 0x4000;
+	. = ALIGN(4);
+	__bl_boot_args_buf = .;
+
+
+	. = CONFIG_BL_DDR_START + 0x8000;
+	. = ALIGN(4);
+	.text :
+	{
+		*(.text)
+	}
+
+	.rodata :
+	{
+		*(.rodata)
+	}
+
+        . = ALIGN(4);
+	.data :
+	{
+		*(.data)
+	}
+	__exidx_start = .;
+	.ARM.exidx   : { *(.ARM.exidx* .gnu.linkonce.armexidx.*) }
+	__exidx_end = .;
+
+	. = ALIGN(4);
+	__bss_start = .;
+        .bss :
+	{
+		*(.bss)
+	}
+	. = ALIGN(4);
+	__bss_stop = .;
+
+	. = ALIGN(32);
+	__heap_start = .;
+
+	. = CONFIG_BL_DDR_END - 0x4000;
+	. = ALIGN(4);
+	__svc_stack_start = .;
+
+	. = CONFIG_BL_DDR_END;
+	. = ALIGN(4);
+	__irq_stack_start = .;
+}

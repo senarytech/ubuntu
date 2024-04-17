@@ -1,0 +1,106 @@
+#!/bin/bash
+
+source build/header.rc
+
+[ $clean -eq 1 ] && exit 0
+
+FRAMEWORK_DIR=${CONFIG_SYNA_SDK_PATH}/synap/framework/platform
+
+function get_cur_platform()
+{
+    if [[ ${build_type} == "VSSDK" ]];then
+
+        if [ "is${CONFIG_RUNTIME_ANDROID}" = "isy" ]; then
+            cur_platform=android_vssdk
+        elif [ "is${CONFIG_RUNTIME_LINUX_BASELINE_BUILDROOT}" = "isy" ]; then
+            cur_platform=linux_baseline
+        elif [ "is${CONFIG_RUNTIME_UBUNTU}" = "isy" ]; then
+            cur_platform=linux_baseline
+        elif [ "is${CONFIG_RUNTIME_OE}" = "isy" ]; then
+            cur_platform=oe
+        elif [ "is${CONFIG_RUNTIME_OE64}" = "isy" ]; then
+            cur_platform=oe
+        else
+            echo "error! synap not supported!"
+            exit 1
+        fi
+
+    elif [[ ${build_type} == *"VSSDK_REL"* ]];then
+
+        if [[ ${cur_runtime_os} == *"ANDROID"* ]];then
+            cur_platform=android_vssdk
+        elif [[ ${cur_runtime_os} == *"LINUX"* ]];then
+            if [[ "${CONFIG_TOOLCHAIN_APPLICATION}" == *"poky"* ]]; then
+                cur_platform=oe
+            else
+                cur_platform=linux_baseline
+            fi
+        else
+            echo "unsupported runtime_os"
+            exit 1
+        fi
+    elif [[ ${build_type} == *"LINUX_HOST"* ]];then
+        cur_platform=linux_host
+    else
+        echo "unsupported build type ${build_type}"
+        exit 1
+    fi
+}
+
+function build_mod()
+{
+    if [[ $# -lt 2 ]];then
+        echo "build module params not correct"
+        exit 1
+    fi
+
+    build_type=${1}
+    mod_dir=${2}
+    mod_name=$(basename ${mod_dir})
+
+    if [[ ${build_type} == *"VSSDK_REL"* ]];then
+        if [[ -z ${3} ]];then
+            echo "need pass into cur_runtime for release build"
+            exit 1
+        fi
+
+        cur_runtime_os=${3}
+    fi
+
+    get_cur_platform
+    cmake_args="-DCUR_RUNTIME_PLATFORM=${cur_platform} -DVSSDK_DIR=${CONFIG_SYNA_SDK_PATH} -DSYNAP_BUILD_TYPE=${build_type} -DCMAKE_BUILD_TYPE=Release"
+
+    # here we need to source the environment files of the OE toolchain. we cannot do this in the 
+    # cmake file like for the other platforms because the toolchain files included in the 
+    # toolchain that we use for the build require the environment variables to be set
+    if [ ${cur_platform} = "oe" ]; then
+        if [[ "${CONFIG_TOOLCHAIN_APPLICATION}" == *"aarch64"* ]]; then
+            environment_file=environment-setup-aarch64-poky-linux
+        else
+            environment_file=environment-setup-armv7at2hf-neon-vfpv4-pokymllib32-linux-gnueabi
+        fi
+
+        oe_dir=${CONFIG_SYNA_SDK_PATH}/toolchain/oe/linux-x64/gcc-9.3.0-poky
+
+        source ${oe_dir}/${environment_file}
+
+        cmake_args+=" -DCMAKE_TOOLCHAIN_FILE=${OE_CMAKE_TOOLCHAIN_FILE}"
+    fi
+
+    BUILD_DIR=${CONFIG_SYNA_SDK_BUILD_PATH}/SYNAP/${mod_name}
+    if [[ -d ${BUILD_DIR} ]];then
+        rm -rf ${BUILD_DIR}
+    fi
+
+    mkdir -p ${BUILD_DIR}
+
+    pushd ${BUILD_DIR}
+    cmake -G Ninja ${mod_dir} $cmake_args
+    target_num=$(ninja -t targets |grep install |wc -l)
+    if [[ ${target_num} -gt 0 ]];then
+        ninja install
+    fi
+    popd
+
+    echo "Build SyNAP ${mod_name} ${build_type} Done"
+}

@@ -1,0 +1,7 @@
+ImageHeadVersion=0x1
+ImageCustKeyType=0x1
+ImageSecurityLevel=0x0
+ImageMarketID=0x1
+ImageMarketIDMask=0xFFFFFFFF
+ImageVersion=0x0
+ImageVersionMask=0xFF

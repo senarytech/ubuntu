@@ -1,0 +1,107 @@
+#!/bin/bash
+
+source build/header.rc
+source build/chipset.rc
+source build/utils.rc
+
+source build/chipparam.rc ${syna_chip_name_set[0]}
+source ${CONFIG_SYNA_SDK_PATH}/synap/framework/build/build_mod.rc
+
+build_config=${CONFIG_SYNA_SDK_PATH}/build/.config
+if [[ ! -e "${build_config}" ]] ; then
+    echo "build config not exist"
+    exit 1
+fi
+
+build_config_rel=${build_config}.rel.synap
+cp ${build_config} ${build_config_rel}
+if [[ ! -e "${build_config_rel}" ]] ; then
+    echo "build config.rel not exist"
+    exit 1
+fi
+
+function find_replace()
+{
+    if [[ $# -lt 2 ]]; then
+        echo "parameter not correct"
+        exit 1
+    fi
+
+    config_find=$1
+    config_replace=$2
+
+    found=$(grep -i "${config_find}" ${build_config_rel} | wc -l)
+    if [[ ${found} -lt 1 ]]; then
+        echo "${config_find}=${config_replace}" >> ${build_config_rel}
+    else
+        sed -ir "s!^${config_find}=.*!${config_find}=${config_replace}!" ${build_config_rel}
+    fi
+}
+
+# TODO: refine vssdk build active .config
+# when vssdk release build, there are some .config.xx created, such as .config.vs680
+# or .config.vs680.baseline, but only amp related CONFIG different, no differece for
+# runtime config as toolchain or runtime OS, still copy from `sample_feature` defconfig
+# better have .config.vs680 and .config.vs640.baseline has the real valid CONFIG can be used by modules
+# for synap vssdk compilation, temporarily extend .config and create .config.rel.synap to be used by cmake
+function ext_config_file()
+{
+    find_replace CONFIG_SYNA_SDK_OUT_SYSYROOT ${cur_sysroot_out}
+
+    if [[ ${cur_runtime} == *"LINUX"* ]]; then
+        find_replace CONFIG_TOOLCHAIN_APPLICATION \"${cur_toolchain}\"
+        find_replace CONFIG_TOOLCHAIN_APPLICATION_PATH \"${cur_toolchain_path}\"
+        find_replace CONFIG_TOOLCHAIN_APPLICATION_CC \"${cur_toolchain}gcc\"
+    fi
+
+    if [[ ${cur_runtime} == *"ANDROID"* ]]; then
+        find_replace CONFIG_TOOLCHAIN_APPLICATION \"${cur_toolchain}\"
+        find_replace CONFIG_TOOLCHAIN_APPLICATION_PATH \"${cur_toolchain_path}\"
+        find_replace CONFIG_TOOLCHAIN_APPLICATION_CC \"clang\"
+        find_replace CONFIG_TOOLCHAIN_CLANG_PATH \"clang/linux-x86/clang-r416183b1\"
+    fi
+}
+
+function release_mod()
+{
+    mod_dir=${1}
+    if [[ ! -d ${mod_dir} ]];then
+        return
+    fi
+
+    set -x
+
+    for i in ${!syna_chip_rev_set[*]}
+    do
+        toolchain_array=()
+        count=$(get_target_count)
+        for ((index = 0; index != count; index++));
+        do
+            target_list=$(get_target_list_by_index $index)
+            IFS=',' read cur_runtime cur_sysroot cur_toolchain cur_toolchain_path <<< "$target_list"
+
+            # only build for different toolchain
+            if [[ " ${toolchain_array[@]} " =~ " ${cur_toolchain} " ]]; then
+                continue
+            fi
+
+            toolchain_array+=($cur_toolchain)
+            cur_sysroot_out=$(get_sysroot_out_path $cur_sysroot)
+
+            if [[ ${cur_sysroot_out} == *"rdk"* ]];then
+                echo "sw_stack not compile rdk"
+                continue
+            fi
+
+            ext_config_file
+
+            echo "Build NPU STACK ${cur_runtime} with ${cur_toolchain} sysroot:${cur_sysroot_out} compile ${mod_dir}"
+
+            CONFIG_TOOLCHAIN_APPLICATION=${cur_toolchain}
+            build_mod "VSSDK_REL" ${mod_dir} ${cur_runtime}
+
+        done
+    done
+
+    rm ${build_config_rel}
+}

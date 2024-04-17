@@ -1,0 +1,2 @@
+#include_next <__config>
+#    undef _LIBCPP_HAS_NO_TEMPLATE_ALIASES

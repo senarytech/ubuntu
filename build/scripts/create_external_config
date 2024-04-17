@@ -1,0 +1,213 @@
+#!/bin/bash
+set -e
+
+# This script must be able to run with bash-3.1, so it can't use
+# associative arrays. Instead, it emulates them using 'eval'. It
+# can however use indexed arrays, supported since at least bash-3.0.
+
+declare -a EXT_NAMES
+
+main() {
+    local OPT OPTARG
+    local ofile ofmt
+
+    while getopts :hkmro: OPT; do
+        case "${OPT}" in
+        h)  help; exit 0;;
+        o)  ofile="${OPTARG}";;
+        k)  ofmt="kconfig";;
+        m)  ofmt="mk";;
+        r)  ofmt="rc";;
+        :)  error "option '%s' expects a mandatory argument\n" "${OPTARG}";;
+        \?) error "unknown option '%s'\n" "${OPTARG}";;
+        esac
+    done
+    # Forget options; keep only positional args
+    shift $((OPTIND-1))
+
+    case "${ofmt}" in
+    rc|mk|kconfig)
+        ;;
+    *)  error "no output format specified (-m/-k)\n";;
+    esac
+    if [ -z "${ofile}" ]; then
+        error "no output file specified (-o)\n"
+    fi
+
+    exec >"${ofile}"
+
+    do_validate_one ${@}
+
+    do_${ofmt}
+}
+
+do_validate_one() {
+    local ext_tree="${1}"
+    local ext_name ext_desc n d
+
+    if [ ${#} -eq 0 ]; then
+        return
+    fi
+
+    if [ ! -d "${ext_tree}" ]; then
+        error "'%s': no such file or directory\n" "${ext_tree}"
+    fi
+    if [ ! -r "${ext_tree}" -o ! -x "${ext_tree}" ]; then
+        error "'%s': permission denied\n" "${ext_tree}"
+    fi
+    if [ ! -f "${ext_tree}/external.desc" ]; then
+        error "'%s': does not have a name (in 'external.desc').\n"
+    fi
+    ext_name="$(sed -r -e '/^name: +(.*)$/!d; s//\1/' "${ext_tree}/external.desc")"
+    if [ -z "${ext_name}" ]; then
+        error "'%s/external.desc': does not define the name\n" "${ext_tree}"
+    fi
+    # Only ASCII chars in [A-Za-z0-9_] are permitted
+    n="$(sed -r -e 's/[A-Za-z0-9_]//g' <<<"${ext_name}" )"
+    if [ -n "${n}" ]; then
+        # Escape '$' so that it gets printed
+        error "'%s': name '%s' contains invalid chars: '%s'\n" \
+            "${ext_tree}" "${ext_name//\$/\$\$}" "${n//\$/\$\$}"
+    fi
+    eval d="\"\${EXT_PATHS_${ext_name}}\""
+    if [ -n "${d}" ]; then
+        error "'%s': name '%s' is already used in '%s'\n" \
+            "${ext_tree}" "${ext_name}" "${d}"
+    fi
+    ext_desc="$(sed -r -e '/^desc: +(.*)$/!d; s//\1/' "${ext_tree}/external.desc")"
+    if [ ! -f "${ext_tree}/external.mk" ]; then
+        error "'%s/external.mk': no such file or directory\n" "${ext_tree}"
+    fi
+    if [ ! -f "${ext_tree}/Kconfig.build" ]; then
+        error "'%s/Kconfig.build': no such file or directory\n" "${ext_tree}"
+    fi
+
+    ext_tree="$( cd "${ext_tree}"; pwd )"
+    EXT_NAMES+=( "${ext_name}" )
+    eval EXT_PATHS_${ext_name}="\"\${ext_tree}\""
+    eval EXT_DESCS_${ext_name}="\"\${ext_desc:-\${ext_name}}\""
+}
+
+do_rc() {
+    local ext_name ext_tree
+
+    printf '#\n# Automatically generated file; DO NOT EDIT.\n#\n'
+    printf '\n'
+
+    if [ ${#EXT_NAMES[@]} -eq 0 ]; then
+        printf '\n'
+        printf '# No external tree defined.\n'
+        return
+    fi
+
+    for ext_name in "${EXT_NAMES[@]}"; do
+        eval ext_tree="\"\${EXT_PATHS_${ext_name}}\""
+        printf '\n'
+        printf 'alias EXTERNAL_ROOT_PATH=\"echo %s\"\n' "${ext_tree}"
+    done
+
+}
+
+do_mk() {
+    local ext_name ext_tree
+
+    printf '#\n# Automatically generated file; DO NOT EDIT.\n#\n'
+    printf '\n'
+
+    printf 'EXTERNAL_TREE ?='
+    for ext_name in "${EXT_NAMES[@]}"; do
+        eval ext_tree="\"\${EXT_PATHS_${ext_name}}\""
+        printf ' %s' "${ext_tree}"
+    done
+    printf '\n'
+
+    printf 'EXTERNAL_NAMES = \n'
+    printf 'EXTERNAL_DIRS = \n'
+    printf 'EXTERNAL_MKS = \n'
+
+    if [ ${#EXT_NAMES[@]} -eq 0 ]; then
+        printf '\n'
+        printf '# No external tree defined.\n'
+        return
+    fi
+
+    for ext_name in "${EXT_NAMES[@]}"; do
+        eval ext_desc="\"\${EXT_DESCS_${ext_name}}\""
+        eval ext_tree="\"\${EXT_PATHS_${ext_name}}\""
+        printf '\n'
+        printf 'EXTERNAL_NAMES += %s\n' "${ext_name}"
+        printf 'EXTERNAL_DIRS += %s\n' "${ext_tree}"
+        printf 'EXTERNAL_MKS += %s/external.mk\n' "${ext_tree}"
+        printf 'export EXTERNAL_ROOT_PATH = %s\n' "${ext_tree}"
+        printf 'export EXTERNAL_ROOT_DESC = %s\n' "${ext_desc}"
+    done
+}
+
+do_kconfig() {
+    local ext_name ext_tree
+
+    printf '#\n# Automatically generated file; DO NOT EDIT.\n#\n'
+    printf '\n'
+
+    if [ ${#EXT_NAMES[@]} -eq 0 ]; then
+        printf '# No external tree defined.\n'
+        return
+    fi
+
+    printf 'menu "External options"\n'
+    printf '\n'
+
+    for ext_name in "${EXT_NAMES[@]}"; do
+        eval ext_desc="\"\${EXT_DESCS_${ext_name}}\""
+        eval ext_tree="\"\${EXT_PATHS_${ext_name}}\""
+        if [ ${#EXT_NAMES[@]} -gt 1 ]; then
+            printf 'menu "%s"\n' "${ext_desc}"
+        fi
+        printf 'comment "%s (in %s)"\n' "${ext_desc}" "${ext_tree}"
+        printf 'config EXTERNAL_ROOT_PATH\n'
+        printf '\tstring\n'
+        printf '\tdefault "%s"\n' "${ext_tree}"
+        printf 'source "%s/Kconfig.build"\n' "${ext_tree}"
+        if [ ${#EXT_NAMES[@]} -gt 1 ]; then
+            printf 'endmenu # %s\n' "${ext_name}"
+        fi
+        printf '\n'
+    done
+
+    printf "endmenu # User-provided options\n"
+}
+
+help() {
+    cat <<-_EOF_
+	Usage:
+	    ${my_name} <-m|-k> -o FILE PATH
+
+	With -m, ${my_name} generates the makefile fragment that defines
+	variables related to the external trees passed as positional
+	arguments.
+
+	With -k, ${my_name} generates the kconfig snippet to include the
+	configuration options specified in the external trees passed
+	as positional arguments.
+
+	Using -k and -m together is not possible. The last one wins.
+
+	Options:
+	    -m  Generate the makefile fragment.
+
+	    -k  Generate the kconfig snippet.
+
+	    -o FILE
+	        FILE in which to generate the kconfig snippet or makefile
+	        fragment.
+
+	Returns:
+	    0   If no error
+	    !0  If any error
+	_EOF_
+}
+
+error() { local fmt="${1}"; shift; printf "EXTERNAL_ERROR = ${fmt}" "${@}"; exit 1; }
+
+my_name="${0##*/}"
+main "${@}"

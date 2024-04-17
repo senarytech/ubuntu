@@ -1,0 +1,14 @@
+prefix=/home/wdy/ubuntu/opensource/syna-release/out/vs680_a0_ubuntu20_evk/target/ffmpeg
+exec_prefix=${prefix}
+libdir=/home/wdy/ubuntu/opensource/syna-release/out/vs680_a0_ubuntu20_evk/target/ffmpeg/lib
+includedir=/home/wdy/ubuntu/opensource/syna-release/out/vs680_a0_ubuntu20_evk/target/ffmpeg/include
+
+Name: libavutil
+Description: FFmpeg utility library
+Version: 56.31.100
+Requires: 
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  -lavutil 
+Libs.private: -pthread -lm
+Cflags: -I${includedir}

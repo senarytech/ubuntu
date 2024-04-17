@@ -1,0 +1,8 @@
+#
+# For a description of the syntax of this configuration file,
+# see Documentation/kbuild/kconfig-language.txt.
+#
+menu "SYNAP Configuration"
+
+source module/synap/Kconfig.common
+endmenu

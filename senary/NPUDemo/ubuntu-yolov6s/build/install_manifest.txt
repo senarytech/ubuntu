@@ -1,0 +1,12 @@
+/home/don/Dq/NPU/project/paddlepaddle/ubuntu-yolov6s/build/install/lib/libsynapnb.so
+/synap/allocator.hpp
+/synap/buffer.hpp
+/synap/buffer_cache.hpp
+/synap/network.hpp
+/synap/npu.hpp
+/synap/tensor.hpp
+/synap/types.hpp
+/home/don/Dq/NPU/project/paddlepaddle/ubuntu-yolov6s/build/install/bin/synap_cli
+/home/don/Dq/NPU/project/paddlepaddle/ubuntu-yolov6s/build/install/bin/synap_cli_ic
+/home/don/Dq/NPU/project/paddlepaddle/ubuntu-yolov6s/build/install/bin/synap_cli_od
+/home/don/Dq/NPU/project/paddlepaddle/ubuntu-yolov6s/build/install/bin/synap_cli_yolov6

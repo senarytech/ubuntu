@@ -1,0 +1,29 @@
+Prerequirements
+---------------
+
+1. cross  compile  
+
+
+Build steps
+-----------
+
+mkdir build
+cd build
+cmake .. 
+make 
+make install
+
+
+Push binaries
+---------------------
+
+2，使用adb push可执行文件到vs680板子上，需要注意同时adb push ./build/lib/synapnb/libsynapnb.so 和 ./lib/opencv/lib/libopencv_java4.so 到vs680上，
+```sh
+export LD_LIBRARY_PATH=/vendor/lib/:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$/path/to/so/:$LD_LIBRARY_PATH
+```
+
+3 运行相应的可执行文件
+
+4 编写代码参照app/synap_cli_yolomultitask, 基本就是把master分支中的 cv::dnn 部分替换即可
+ 

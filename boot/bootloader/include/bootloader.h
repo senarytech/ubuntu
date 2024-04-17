@@ -1,0 +1,92 @@
+/*
+ * NDA AND NEED-TO-KNOW REQUIRED
+ *
+ * Copyright © 2013-2018 Synaptics Incorporated. All rights reserved.
+ *
+ * This file contains information that is proprietary to Synaptics
+ * Incorporated ("Synaptics"). The holder of this file shall treat all
+ * information contained herein as confidential, shall use the
+ * information only for its intended purpose, and shall not duplicate,
+ * disclose, or disseminate any of this information in any manner
+ * unless Synaptics has otherwise provided express, written
+ * permission.
+ *
+ * Use of the materials may require a license of intellectual property
+ * from a third party or from Synaptics. This file conveys no express
+ * or implied licenses to any intellectual property rights belonging
+ * to Synaptics.
+ *
+ * INFORMATION CONTAINED IN THIS DOCUMENT IS PROVIDED "AS-IS," AND
+ * SYNAPTICS EXPRESSLY DISCLAIMS ALL EXPRESS AND IMPLIED WARRANTIES,
+ * INCLUDING ANY IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE, AND ANY WARRANTIES OF NON-INFRINGEMENT OF ANY
+ * INTELLECTUAL PROPERTY RIGHTS. IN NO EVENT SHALL SYNAPTICS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, PUNITIVE, OR
+ * CONSEQUENTIAL DAMAGES ARISING OUT OF OR IN CONNECTION WITH THE USE
+ * OF THE INFORMATION CONTAINED IN THIS DOCUMENT, HOWEVER CAUSED AND
+ * BASED ON ANY THEORY OF LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * NEGLIGENCE OR OTHER TORTIOUS ACTION, AND EVEN IF SYNAPTICS WAS
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. IF A TRIBUNAL OF
+ * COMPETENT JURISDICTION DOES NOT PERMIT THE DISCLAIMER OF DIRECT
+ * DAMAGES OR ANY OTHER DAMAGES, SYNAPTICS' TOTAL CUMULATIVE LIABILITY
+ * TO ANY PARTY SHALL NOT EXCEED ONE HUNDRED U.S. DOLLARS.
+ */
+#ifndef	__BOOTLOADER_H__
+#define	__BOOTLOADER_H__
+
+
+typedef enum
+{
+    BOOTLOADER_NULL_STAGE = 0,
+    BOOTLOADER_INITCHIP_PRESTAGE = (1),
+    BOOTLOADER_INITCHIP_STAGE = (BOOTLOADER_INITCHIP_PRESTAGE << 1),
+    BOOTLOADER_INITCHIP_POSTSTAGE = (BOOTLOADER_INITCHIP_STAGE << 1),
+    BOOTLOADER_INITSTORAGE_PRESTAGE = (BOOTLOADER_INITCHIP_POSTSTAGE << 1),
+    BOOTLOADER_INITSTORAGE_STAGE = (BOOTLOADER_INITSTORAGE_PRESTAGE << 1),
+    BOOTLOADER_INITSTORAGE_POSTSTAGE = (BOOTLOADER_INITSTORAGE_STAGE << 1),
+    BOOTLOADER_GETVERSIONTABLE_PRESTAGE = (BOOTLOADER_INITSTORAGE_POSTSTAGE << 1),
+    BOOTLOADER_GETVERSIONTABLE_STAGE = (BOOTLOADER_GETVERSIONTABLE_PRESTAGE << 1),
+    BOOTLOADER_GETVERSIONTABLE_POSTSTAGE = (BOOTLOADER_GETVERSIONTABLE_STAGE << 1),
+    BOOTLOADER_INITFTS_PRESTAGE = (BOOTLOADER_GETVERSIONTABLE_POSTSTAGE << 1),
+    BOOTLOADER_INITFTS_STAGE = (BOOTLOADER_INITFTS_PRESTAGE << 1),
+    BOOTLOADER_INITFTS_POSTSTAGE = (BOOTLOADER_INITFTS_STAGE << 1),
+    BOOTLOADER_LOADKERNEL_PRESTAGE = (BOOTLOADER_INITFTS_POSTSTAGE << 1),
+    BOOTLOADER_LOADKERNEL_STAGE = (BOOTLOADER_LOADKERNEL_PRESTAGE << 1),
+    BOOTLOADER_LOADKERNEL_POSTSTAGE = (BOOTLOADER_LOADKERNEL_STAGE << 1),
+    BOOTLOADER_STARTKERNEL_PRESTAGE = (BOOTLOADER_LOADKERNEL_POSTSTAGE << 1),
+    BOOTLOADER_STARTKERNEL_STAGE = (BOOTLOADER_STARTKERNEL_PRESTAGE << 1),
+    BOOTLOADER_NORMAL_RESET_STAGE = (BOOTLOADER_STARTKERNEL_STAGE << 1),
+    BOOTLOADER_NORMAL_POWERDOWN_STAGE = (BOOTLOADER_NORMAL_RESET_STAGE << 1),
+    BOOTLOADER_MAX_STAGE = (BOOTLOADER_NORMAL_POWERDOWN_STAGE + 1),
+}bootloader_stage;
+
+typedef struct  {
+    char name[32];
+    unsigned int protect; //avoid buffer overflow of name. use 4 bytes directly to keep 4 bytes alignment
+    /* the return value is the next stage we will go to. otherwise, return 0 */
+    unsigned int (*entry_func)(unsigned int boot_stage);	/* task entry */
+    unsigned int (*get_stages)(void);	/* get the stages */
+}bootloader_task_t;
+
+/*This buff used to store large data block, and it will be rewriten after bootloader stage.
+*/
+extern int __bootloader_buf_start;
+#define BOOTLOADER_BUF_ADDR	((uintptr_t)(&__bootloader_buf_start))
+#define K_BUFF_ADDR BOOTLOADER_BUF_ADDR
+#define KERNEL_MAX_SIZE			(16 << 20)	/* 16MB */
+
+#define PARTITION_MAX_SIZE		(64 << 20)      /* 64MB */
+
+#ifdef CONFIG_FASTLOGO
+#define LOGO_FRM_BUF  (K_BUFF_ADDR + PARTITION_MAX_SIZE)
+#define MAX_LOGO_FRM_SIZE (5 << 20)			/* 5MB */
+#endif
+
+#ifndef BOOTMODE_NORMAL
+#define BOOTMODE_NORMAL 0
+#endif
+
+#ifndef BOOTMODE_RECOVERY
+#define BOOTMODE_RECOVERY 1
+#endif
+#endif //!< __BOOTLOADER_H__

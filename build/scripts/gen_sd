@@ -1,0 +1,234 @@
+#!/bin/bash
+set -e
+
+BOOT_UUID="EF00"
+MS_UUID="0700"
+
+#
+sd1=format
+sd2=key_1st.subimg
+sd3=tzk_normal.subimg
+sd4=key_2nd.subimg
+sd5=tzk_normalB.subimg
+sd6=tzk_recovery.subimg
+sd7=bl_recovery.subimg
+sd8=erase
+sd9=bl_normal.subimg
+sd10=bl_normalB.subimg
+sd11=boot.subimg
+sd12=fastlogo.subimg
+sd13=fastlogoB.subimg
+sd14=erase
+sd15=erase
+sd16=system.subimg
+sd17=format
+#
+
+#
+## img for SD
+#
+OUTPUT="vs680_SD.img"
+#
+#dd if=/dev/zero of=$OUTPUT bs=1M count=2
+#sgdisk --clear \
+#--set-alignment=2 \
+#    --new=1:34:2081		--change-name=1:loader1 --typecode=1:${MS_UUID} \
+#    $OUTPUT
+#
+#exit
+
+
+dd if=/dev/zero of=$OUTPUT bs=1M count=15360
+
+
+
+echo "Partitioning the SD image..."
+gdisk ${OUTPUT} << EOF
+o
+Y
+x
+l
+2
+m
+
+n
+1
++16M
++16M
+0700
+c
+factory_setting
+
+n
+2
+
++1M
+0700
+c
+2
+key_1st
+
+n
+3
+
++7M
+0700
+c
+3
+tzk_normal
+
+n
+4
+
++1M
+0700
+c
+4
+key_2nd
+
+n
+5
+
++7M
+0700
+c
+5
+tzk_normalB
+
+n
+6
+
++16M
+0700
+c
+6
+tzk_recovery
+
+n
+7
+
++16M
+0700
+c
+7
+bl_recovery
+
+n
+8
+
++16M
+0700
+c
+8
+recovery
+
+n
+9
+
++16M
+0700
+c
+9
+bl_normal
+
+n
+10
+
++16M
+0700
+c
+10
+bl_normalB
+
+n
+11
+
++16M
+0700
+c
+11
+boot
+
+n
+12
+
++16M
+0700
+c
+12
+fastlogo
+
+n
+13
+
++16M
+0700
+c
+13
+fastlogoB
+
+n
+14
+
++2M
+0700
+c
+14
+devinfo
+
+n
+15
+
++2M
+0700
+c
+15
+misc
+
+n
+16
+
++8192M
+0700
+c
+16
+system
+
+n
+17
+
++6524M
+0700
+c
+17
+userdata
+
+p
+w
+Y
+EOF
+
+SEEK=`sgdisk -i 1 vs680_SD.img | grep "First sector" | awk '{print $3}'`
+
+#dd bs=512 if="$sd1" of="$OUTPUT" seek=16777215 conv=notrunc
+dd bs=512 if="$sd2" of="$OUTPUT" seek=`sgdisk -i 2 vs680_SD.img | grep "First sector" | awk '{print $3}'` conv=notrunc
+
+
+
+dd bs=512 if="$sd3" of="$OUTPUT" seek=`sgdisk -i 3 vs680_SD.img | grep "First sector" | awk '{print $3}'` conv=notrunc
+
+
+dd bs=512 if="$sd4" of="$OUTPUT" seek=`sgdisk -i 4 vs680_SD.img | grep "First sector" | awk '{print $3}'` conv=notrunc
+dd bs=512 if="$sd5" of="$OUTPUT" seek=`sgdisk -i 5 vs680_SD.img | grep "First sector" | awk '{print $3}'` conv=notrunc
+dd bs=512 if="$sd6" of="$OUTPUT" seek=`sgdisk -i 6 vs680_SD.img | grep "First sector" | awk '{print $3}'` conv=notrunc
+dd bs=512 if="$sd7" of="$OUTPUT" seek=`sgdisk -i 7 vs680_SD.img | grep "First sector" | awk '{print $3}'` conv=notrunc
+#dd bs=512 if="$sd8" of="$OUTPUT" seek=83886073 conv=notrunc
+dd bs=512 if="$sd9" of="$OUTPUT" seek=`sgdisk -i 9 vs680_SD.img | grep "First sector" | awk '{print $3}'` conv=notrunc 
+dd bs=512 if="$sd10" of="$OUTPUT" seek=`sgdisk -i 10 vs680_SD.img | grep "First sector" | awk '{print $3}'` conv=notrunc
+dd bs=512 if="$sd11" of="$OUTPUT" seek=`sgdisk -i 11 vs680_SD.img | grep "First sector" | awk '{print $3}'` conv=notrunc
+dd bs=512 if="$sd12" of="$OUTPUT" seek=`sgdisk -i 12 vs680_SD.img | grep "First sector" | awk '{print $3}'` conv=notrunc
+dd bs=512 if="$sd13" of="$OUTPUT" seek=`sgdisk -i 13 vs680_SD.img | grep "First sector" | awk '{print $3}'` conv=notrunc
+#dd bs=512 if="$sd14" of="$OUTPUT" seek=184549363 conv=notrunc
+#dd bs=512 if="$sd15" of="$OUTPUT" seek=186646514 conv=notrunc
+dd bs=512 if="$sd16" of="$OUTPUT" seek=`sgdisk -i 16 vs680_SD.img | grep "First sector" | awk '{print $3}'` conv=notrunc
+#dd bs=512 if="$sd17" of="$OUTPUT" seek=8778678256 conv=notrunc

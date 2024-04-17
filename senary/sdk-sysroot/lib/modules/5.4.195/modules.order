@@ -1,0 +1,5 @@
+kernel/fs/autofs/autofs4.ko
+kernel/drivers/soc/berlin/modules/rogue_ws/pvrsrvkm.ko
+kernel/drivers/soc/berlin/modules/drm/syna_drm.ko
+kernel/drivers/net/wireless/bcmdhd/bcmdhd.ko
+kernel/drivers/synap/kernel/synap.ko

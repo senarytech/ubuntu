@@ -1,0 +1,82 @@
+#ifndef __PINMUX_SETTING_H__
+#define __PINMUX_SETTING_H__
+
+#include "pinmux.h"
+
+typedef struct {
+	unsigned int index;
+	unsigned int value;
+}pinmux_table_t;
+
+pinmux_table_t pinmux_table[] = {
+#if 0
+	{DMIC0_CLK, 0},
+	{DMIC0_DAT, 0},
+	{DMIC1_CLK, 0},
+	{DMIC1_DAT, 0},
+	{DMIC2_DAT, 0},
+	{DMIC3_DAT, 0},
+	{LEDPWM0_R, 0},
+	{LEDPWM0_G, 0},
+	{LEDPWM0_B, 0},
+	{LEDPWM1_R, 0},
+	{LEDPWM1_G, 0},
+	{LEDPWM1_B, 0},
+	{I3C0_SCL,  0},
+	{I3C0_SDA,  0},
+	{I2SRX0_SCK,0},
+	{I2SRX0_WS, 0},
+	{I2SRX0_SD, 0},
+	{I2STX0_SCK,0},
+	{I2STX0_WS, 0},
+	{I2STX0_SD, 0},
+	{I2S0_MCLK, 0},
+	{I2SRX1_SCK,0},
+	{I2SRX1_WS, 0},
+	{I2SRX1_SD, 0},
+	{I2STX1_SCK,0},
+	{I2STX1_WS, 0},
+	{I2STX1_SD, 0},
+	{I2S1_MCLK, 0},
+	{NAND_WPn,  0},
+	{NAND_REn,  0},
+	{NAND_WEn,  0},
+	{NAND_CLE,  0},
+	{NAND_ALE,  0},
+	{NAND_IO7,  0},
+	{NAND_IO6,  0},
+	{NAND_IO5,  0},
+	{NAND_IO4,  0},
+	{NAND_IO3,  0},
+	{NAND_IO2,  0},
+	{NAND_IO1,  0},
+	{NAND_IO0,  0},
+	{RSTOn,     0},
+	{PWR_OK,    0},
+	{SD0_CLK,   0},
+	{SD0_DAT0,  0},
+	{SD0_DAT1,  0},
+	{SD0_DAT2,  0},
+	{SD0_DAT3,  0},
+	{SD0_CMD,   0},
+	{CLKO_FT,   0},
+	{UART1_TX,  0},
+	{UART1_RX,  0},
+	{UART1_CTSn,0},
+	{UART1_RTSn,0},
+	{SPI_SS0n,  0},
+	{SPI_SS1n,  0},
+	{SPI_SS2n,  0},
+	{SPI_SCLK,  0},
+	{SPI_DO,    0},
+	{SPI_DI,    0},
+	{I3C1_SCL,  0},
+	{I3C1_SDA,  0},
+	{UART0_TX,  0},
+	{UART0_RX,  0},
+	{TMS,       0},
+	{TDI,       0},
+	{TDO,       0},
+#endif
+};
+#endif

@@ -1,0 +1,4 @@
+CONFIG_TOOLCHAIN_APPLICATION_SYSROOT="${topdir}/out/${CONFIG_PRODUCT_NAME}/target/build_sysroot/"
+CONFIG_TOOLCHAIN_APPLICATION_CFLAG="-march=armv8-a+crc -mtune=cortex-a73 -mabi=lp64  --sysroot=${CONFIG_TOOLCHAIN_APPLICATION_SYSROOT}  -I=/usr/include/aarch64-linux-gnu -I=/usr/include"
+CONFIG_TOOLCHAIN_APPLICATION_CPPFLAG=${CONFIG_TOOLCHAIN_APPLICATION_CFLAG}
+CONFIG_TOOLCHAIN_APPLICATION_LDFLAG="-static-libgcc -static-libstdc++ --sysroot=${CONFIG_TOOLCHAIN_APPLICATION_SYSROOT} -L=/lib/aarch64-linux-gnu -L=/lib -L=/lib64 -L=/usr/lib64"

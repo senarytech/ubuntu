@@ -1,0 +1,10 @@
+### get tzk addr and tzkp addr from config
+
+configfile=${module_topdir}/products/${syna_chip_name}/${tz_memlayout}/config
+var=$(awk -F= '{print $2}' ${configfile})
+
+tzk_addr=$(echo $var | awk '{print $1}')
+tzbp_addr=$(echo $var | awk '{print $2}')
+tzk2_addr=$[${tzk_addr} + 262144]
+tzoem_addr=$(echo $var | awk '{print $3}')
+

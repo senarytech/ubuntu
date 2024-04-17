@@ -1,0 +1,91 @@
+/*******************************************************************************
+ * Copyright (C) Marvell International Ltd. and its affiliates
+ *******************************************************************************
+ * Marvell GPL License Option
+ *
+ * If you received this File from Marvell, you may opt to use, redistribute and/or
+ * modify this File in accordance with the terms and conditions of the General
+ * Public License Version 2, June 1991 (the "GPL License"), a copy of which is
+ * available along with the File in the license.txt file or by writing to the Free
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 or
+ * on the worldwide web at http://www.gnu.org/licenses/gpl.txt.
+ *
+ * THE FILE IS DISTRIBUTED AS-IS, WITHOUT WARRANTY OF ANY KIND, AND THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE ARE EXPRESSLY
+ * DISCLAIMED.  The GPL License provides additional details about this warranty
+ * disclaimer.
+ *******************************************************************************/
+/*
+ * bootloader memory layout:
+ *  CONFIG_BL_DDR_START - (CONFIG_BL_DDR_START + 0x4000) 	16kb buff of bl_boot_arg from miniloader
+ *  (CONFIG_BL_DDR_START + 0x4000) - (CONFIG_BL_DDR_END - 0x4000) code, rodata, data, bss, heap. stack
+ *  (CONFIG_BL_DDR_START + 0x180000) - (CONFIG_BL_DDR_START + 0X200000) svc_stack, irq_stack
+ *  (CONFIG_BL_DDR_START + 0x200000) - CONFIG_BL_DDR_END 		ttb buffer (more than 4M)
+ *
+ *******************************************************************************/
+OUTPUT_FORMAT("elf64-littleaarch64", "elf64-littleaarch64", "elf64-littleaarch64")
+OUTPUT_ARCH(aarch64)
+ENTRY(BootLoaderEntry)
+SECTIONS
+{
+	. = CONFIG_BL_DDR_BUF;
+	__bootloader_buf_start = .;
+
+	. = CONFIG_BL_DDR_START;
+	. = ALIGN(4);
+	__bl_boot_args_buf = .;
+
+	. = CONFIG_BL_DDR_START + 0x4000;
+	. = ALIGN(4);
+	.text :
+	{
+		*(.text)
+		. = ALIGN(8);
+		__rt_bl_stage_descs_start__ = .;
+		KEEP(*(rt_bl_stage_descs))
+		__rt_bl_stage_descs_end__ = .;
+	}
+
+	.rodata :
+	{
+		*(.rodata)
+	}
+
+        . = ALIGN(4);
+	.data :
+	{
+		*(.data)
+	}
+	__exidx_start = .;
+	.ARM.exidx   : { *(.ARM.exidx* .gnu.linkonce.armexidx.*) }
+	__exidx_end = .;
+
+	. = ALIGN(16);
+	__bss_start = .;
+        .bss :
+	{
+		*(.bss*)
+	}
+	. = ALIGN(16);
+	__bss_stop = .;
+
+	. = CONFIG_BL_DDR_START + 0x160000;
+        . = ALIGN(0x4000);
+        __img_buff_start = .;
+
+	. = CONFIG_BL_DDR_START + 0x180000;
+	. = ALIGN(4);
+	__svc_stack_start = .;
+
+	. = CONFIG_BL_DDR_START + 0x190000;
+	. = ALIGN(32);
+	__heap_start = .;
+
+	. = CONFIG_BL_DDR_START + 0x2f0000;
+	. = ALIGN(32);
+	__heap_end = .;
+
+	. = CONFIG_BL_DDR_START + 0x300000;
+	. = ALIGN(0x4000);
+	__ttb_base_start = .;
+}

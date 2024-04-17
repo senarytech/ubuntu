@@ -1,0 +1,44 @@
+{
+    "Inputs": {
+        "input_0": {
+            "name": "input",
+            "shape": [
+                1,
+                224,
+                224,
+                3
+            ],
+            "format": "nhwc",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 0.9921875,
+                "min_value": -1.0,
+                "scale": 0.0078125,
+                "zero_point": 128
+            },
+            "data_format": ""
+        }
+    },
+    "Outputs": {
+        "output_66": {
+            "name": "output",
+            "shape": [
+                1,
+                1001
+            ],
+            "format": "nhwc",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 19.481830328702927,
+                "min_value": -5.735767304897308,
+                "scale": 0.09889253973960876,
+                "zero_point": 58
+            },
+            "data_format": "confidence_array class_index_base=-1"
+        }
+    },
+    "Recurrent_connections": {},
+    "secure": false
+}

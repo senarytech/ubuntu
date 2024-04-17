@@ -1,0 +1,2 @@
+/home/don/Dq/NPU/Synaptics_Git_Ext_VSSDK-1.10.1-lts/aarch64/gcc-arm-aarch64-linux-gnu-8.3/bin/aarch64-linux-gnu-ar qc libsynap_postprocess.a CMakeFiles/synap_postprocess.dir/src/classifier.cpp.o CMakeFiles/synap_postprocess.dir/src/detector.cpp.o CMakeFiles/synap_postprocess.dir/src/image_postprocessor.cpp.o CMakeFiles/synap_postprocess.dir/src/json_utils.cpp.o
+/home/don/Dq/NPU/Synaptics_Git_Ext_VSSDK-1.10.1-lts/aarch64/gcc-arm-aarch64-linux-gnu-8.3/bin/aarch64-linux-gnu-ranlib libsynap_postprocess.a

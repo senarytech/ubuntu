@@ -1,0 +1,48 @@
+{
+    "Inputs": {
+        "input_0": {
+            "name": "serving_default_input_1",
+            "shape": [
+                1,
+                1,
+                540,
+                960
+            ],
+            "format": "nchw",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 0.9921875,
+                "min_value": -1.0,
+                "scale": 0.0078125,
+                "zero_point": 128
+            },
+            "data_format": "y8",
+            "security": "any"
+        }
+    },
+    "Outputs": {
+        "output_7": {
+            "name": "StatefulPartitionedCall",
+            "shape": [
+                1,
+                1,
+                2160,
+                3840
+            ],
+            "format": "nchw",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 0.9921875,
+                "min_value": -1.0,
+                "scale": 0.0078125,
+                "zero_point": 128
+            },
+            "data_format": "y8",
+            "security": "secure-if-input-secure"
+        }
+    },
+    "Recurrent_connections": {},
+    "secure": true
+}

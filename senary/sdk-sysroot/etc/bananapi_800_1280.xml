@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Marvell>
+    <Berlin name="MIPI DSI config">
+        <!-- Number of the Resolution IDs available for configuration-->
+        <ResolutionSupport  NAME="bananapi_800x1280"
+                            NO_OF_RESID="1" />
+
+        <!--    ResInfo-%d (ResInfo-0, ResInfo-1 etc) entry for each configurable resolution
+                DSI_RES ="102" - Should be always CUSTOM Resolution id which is 102 incase of
+                              Single resolution support
+                Lanes - No. of lanes
+                Data_Lane_Polarity - Polarity of the Data lane
+                Clk_Lane_Polarity - Polarity of the clock lane
+                virtual_chan - virtual channel number
+                Vid_mode - Video mode
+                    0 - non-burst mode + sync pulse
+                    1 - non-burst mode + sync event
+                    2 - Burst mode
+                non-Continuous_clk - 0 for continuous and 1 for non-continuous
+                Byte_clk - Byte clokc rate
+                Recv_ack - Receive acknowledgement
+                Color_format - Color coding format
+                Loosely_18 - Loosely 18 packed
+                Data_Polarity - Data polarity
+                H_polarity - Horizontal polarity
+                V_Polarity - Vertical polarity
+                Eotp_rx - EOTP Reception
+                Eotp_tx - EOTP Transmission
+                Chunks - Numbver of Chunks
+                Null_Pkt - Size of the null packet
+                dpi_lp_cmd - Enable DPI low power command
+                ACTIVE_WIDTH - Active width of the Panel
+                ACTIVE_HEIGHT - Active height of the panel
+                HFP - Horizontal Front porche
+                HSYNCWIDTH - Horizontal sync width
+                HBP - Horizontal Back porche
+                VFP - vertical Front porche
+                VSYNCWIDTH - Vertical sync width
+                VBP - Vertical Back porche
+                TYPE - '0' for SD, '1' for Full HD '2' for UHD
+                SCAN - '1' for Progressive, '0' for Interlaced
+                FRAME_RATE - frame rate
+                FLAG_3D - 3D support
+                FREQ - Pixel clock frequency for DP1
+                PTS_PER_4 - PTS for every 4 -->
+
+        <!-- Timing Params for the CPCB
+                VB_MIN - Minimum vertical blanking
+                HB_MIN - Minimum Horizontal blanking
+                V_OFF - Vertical offset
+                H_OFF - Horizontal offset
+                HB_VOP_OFF - Horizontal VOP offset
+                VB_VOP_OFF - Vertical VOP offset
+                HB_BE - Horizontal Blanking Back Edge
+                VB_BE - Vertical Blanking Back Edge
+                HB_FP - Horizontal Blanking Front porche
+                VB_FP - Vertical Blanking Front porche
+                PIXEL_CLOCK="74784" Pixel clock frequency for DP2
+                COMMAND= Command for initialisation
+                Format - <CMD> <Payloadlength-n> <BYTE1> <...> <BYTEn>
+                Long write Ex: 39 04 FF 98 81 03
+
+                Delay in micro seconds Command format: 0xFF <4BYTE delay>
+                Delay for 100ms(100000us => 0x000186A0)
+                - FF A0 86 01 00
+                -->
+
+        <ResInfo-0
+                    DSI_RES ="102"
+                    Lanes ="4"
+                    Data_Lane_Polarity ="0"
+                    Clk_Lane_Polarity ="0"
+                    virtual_chan ="0"
+                    Vid_mode ="2"
+                    non-Continuous_clk ="1"
+                    Byte_clk ="54400"
+                    Recv_ack ="0"
+                    Color_coding ="5"
+                    Loosely_18 ="0"
+                    Data_Polarity ="1"
+                    H_polarity ="1"
+                    V_Polarity ="1"
+                    Eotp_rx ="0"
+                    Eotp_tx ="1"
+                    Chunks ="0"
+                    Null_Pkt ="fff"
+                    dpi_lp_cmd ="1"
+
+                    ACTIVE_WIDTH ="800"
+                    ACTIVE_HEIGHT ="1280"
+                    HTOTAL ="860"
+                    HFP ="20"
+                    HSYNCWIDTH = "20"
+                    HBP = "20"
+                    VFP = "20"
+                    VSYNCWIDTH = "16"
+                    VBP = "18"
+                    TYPE = "1"
+                    SCAN = "0"
+                    FRAME_RATE = "9"
+                    FLAG_3D = "0"
+                    FREQ = "68000"
+                    PTS_PER_4 = "6000"
+
+                    VB_MIN = "6"
+                    HB_MIN = "30"
+                    V_OFF = "6"
+                    H_OFF = "20"
+                    HB_VOP_OFF ="8"
+                    VB_VOP_OFF = "3"
+                    HB_BE = "7"
+                    VB_BE = "2"
+                    VB_FP = "2"
+                    HB_FP = "10"
+                    PIXEL_CLOCK="68000"
+
+                    COMMAND="
+                    39 04 FF 98 81 03
+                    15 02 01 00
+                    15 02 02 00
+                    15 02 03 53
+                    15 02 04 53
+                    15 02 05 13
+                    15 02 06 04
+                    15 02 07 02
+                    15 02 08 02
+                    15 02 09 00
+                    15 02 0a 00
+                    15 02 0b 00
+                    15 02 0c 00
+                    15 02 0d 00
+                    15 02 0e 00
+                    15 02 0f 00
+                    15 02 10 00
+                    15 02 11 00
+                    15 02 12 00
+                    15 02 13 00
+                    15 02 14 00
+                    15 02 15 00
+                    15 02 16 00
+                    15 02 17 00
+                    15 02 18 00
+                    15 02 19 00
+                    15 02 1a 00
+                    15 02 1b 00
+                    15 02 1c 00
+                    15 02 1d 00
+                    15 02 1e C0
+                    15 02 1f 80
+                    15 02 20 02
+                    15 02 21 09
+                    15 02 22 00
+                    15 02 23 00
+                    15 02 24 00
+                    15 02 25 00
+                    15 02 26 00
+                    15 02 27 00
+                    15 02 28 55
+                    15 02 29 03
+                    15 02 2a 00
+                    15 02 2b 00
+                    15 02 2c 00
+                    15 02 2d 00
+                    15 02 2e 00
+                    15 02 2f 00
+                    15 02 30 00
+                    15 02 31 00
+                    15 02 32 00
+                    15 02 33 00
+                    15 02 34 00
+                    15 02 35 00
+                    15 02 36 00
+                    15 02 37 00
+                    15 02 38 3c
+                    15 02 39 00
+                    15 02 3a 00
+                    15 02 3b 00
+                    15 02 3c 00
+                    15 02 3d 00
+                    15 02 3e 00
+                    15 02 3f 00
+                    15 02 40 00
+                    15 02 41 00
+                    15 02 42 00
+                    15 02 43 00
+                    15 02 44 00
+                    15 02 50 01
+                    15 02 51 23
+                    15 02 52 45
+                    15 02 53 67
+                    15 02 54 89
+                    15 02 55 ab
+                    15 02 56 01
+                    15 02 57 23
+                    15 02 58 45
+                    15 02 59 67
+                    15 02 5a 89
+                    15 02 5b ab
+                    15 02 5c cd
+                    15 02 5d ef
+                    15 02 5e 01
+                    15 02 5f 0A
+                    15 02 60 02
+                    15 02 61 02
+                    15 02 62 08
+                    15 02 63 15
+                    15 02 64 14
+                    15 02 65 02
+                    15 02 66 11
+                    15 02 67 10
+                    15 02 68 02
+                    15 02 69 0F
+                    15 02 6a 0E
+                    15 02 6b 02
+                    15 02 6c 0D
+                    15 02 6d 0C
+                    15 02 6e 06
+                    15 02 6f 02
+                    15 02 70 02
+                    15 02 71 02
+                    15 02 72 02
+                    15 02 73 02
+                    15 02 74 02
+                    15 02 75 0A
+                    15 02 76 02
+                    15 02 77 02
+                    15 02 78 06
+                    15 02 79 15
+                    15 02 7a 14
+                    15 02 7b 02
+                    15 02 7c 10
+                    15 02 7d 11
+                    15 02 7e 02
+                    15 02 7f 0C
+                    15 02 80 0D
+                    15 02 81 02
+                    15 02 82 0E
+                    15 02 83 0F
+                    15 02 84 08
+                    15 02 85 02
+                    15 02 86 02
+                    15 02 87 02
+                    15 02 88 02
+                    15 02 89 02
+                    15 02 8a 02
+                    39 04 FF 98 81 04
+                    15 02 6C 15
+                    15 02 6E 30
+                    15 02 6F 55
+                    15 02 3A 24
+                    15 02 8D 1F
+                    15 02 87 BA
+                    15 02 26 76
+                    15 02 B2 D1
+                    15 02 B5 07
+                    15 02 35 1F
+                    15 02 31 75
+                    15 02 3B 98
+                    15 02 38 01
+                    15 02 39 00
+                    15 02 88 0B
+                    39 04 FF 98 81 01
+                    15 02 22 0A
+                    15 02 31 09
+                    15 02 35 07
+                    15 02 53 48
+                    15 02 40 33
+                    15 02 55 88
+                    15 02 50 95
+                    15 02 51 95
+                    15 02 60 30
+                    15 02 34 01
+                    15 02 A0 0F
+                    15 02 A1 17
+                    15 02 A2 22
+                    15 02 A3 19
+                    15 02 A4 15
+                    15 02 A5 28
+                    15 02 A6 1C
+                    15 02 A7 1C
+                    15 02 A8 78
+                    15 02 A9 1C
+                    15 02 AA 28
+                    15 02 AB 69
+                    15 02 AC 1A
+                    15 02 AD 19
+                    15 02 AE 4B
+                    15 02 AF 22
+                    15 02 B0 2A
+                    15 02 B1 4B
+                    15 02 B2 6B
+                    15 02 B3 3F
+                    15 02 C0 01
+                    15 02 C1 17
+                    15 02 C2 22
+                    15 02 C3 19
+                    15 02 C4 15
+                    15 02 C5 28
+                    15 02 C6 1C
+                    15 02 C7 1D
+                    15 02 C8 78
+                    15 02 C9 1C
+                    15 02 CA 28
+                    15 02 CB 69
+                    15 02 CC 1A
+                    15 02 CD 19
+                    15 02 CE 4B
+                    15 02 CF 22
+                    15 02 D0 2A
+                    15 02 D1 4B
+                    15 02 D2 6B
+                    15 02 D3 3F
+                    39 04 FF 98 81 00
+                    15 02 35 00
+                    FF C0 D4 01 00
+                    05 01 11
+                    FF C0 D4 01 00
+                    05 01 29
+                    39 04 FF 98 81 00"/>
+    </Berlin>
+</Marvell>

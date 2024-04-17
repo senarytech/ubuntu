@@ -1,0 +1,18 @@
+build cmd:
+  1.mkdir build & cd build
+  2.cmake ..
+  3.make 
+
+install:
+  4.cp infotool to rootfs.
+
+ how user:
+  
+  a.sudo chmod 777 /dev/mmcblk0p14
+  5.sudo infotool -set mac xxxxxx
+    sudo infotool -set sn xxxxxx
+    
+    
+
+ how to check
+  6. hexdump -C -n 64  /dev/mmcblk0p14 

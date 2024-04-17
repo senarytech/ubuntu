@@ -1,0 +1,46 @@
+{
+    "Inputs": {
+        "input_0": {
+            "name": "lambda/truediv",
+            "shape": [
+                1,
+                540,
+                960,
+                1
+            ],
+            "format": "nhwc",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 0.9921875,
+                "min_value": -1.0,
+                "scale": 0.0078125,
+                "zero_point": 128
+            },
+            "data_format": ""
+        }
+    },
+    "Outputs": {
+        "output_11": {
+            "name": "add/add",
+            "shape": [
+                1,
+                2160,
+                3840,
+                1
+            ],
+            "format": "nhwc",
+            "quantizer": "asymmetric_affine",
+            "quantize": {
+                "qtype": "u8",
+                "max_value": 0.9921875,
+                "min_value": -1.0,
+                "scale": 0.0078125,
+                "zero_point": 128
+            },
+            "data_format": ""
+        }
+    },
+    "Recurrent_connections": {},
+    "secure": false
+}

@@ -1,0 +1,28 @@
+#Please fill all configs before run the scripts.
+#CONFIG_ANDROID_PATH             : Path to Android code tree
+#CONFIG_SDK_PATH                 : Path to synaptics-sdk
+#CONFIG_ANDROID_OTA_PKG_SOURCE   : Path to input OTA package file
+#CONFIG_ANDROID_PRODUCT_NAME     : TARGET_PRODUCT name of your Android SDK, e.g. "sequoia"
+#CONFIG_SDK_PRODUCT_NAME         : Product name of synaptics-sdk, e.g. "vs680_z1_android_q_launched_stb"
+#CONFIG_SIGNK7_FILE_PATH         : File path of your rootrsa_signk7.keystore
+#CONFIG_CUSTK_FILE_PATH          : File path of your custk_aesk0.keystore
+#CONFIG_EXTRSA_KEY_FILE_PATH     : File path of your extrsa_signk7.keystore
+#CONFIG_SKIP_FACTORY_SETTING     : Skip or not to erase Application key stores in /vendor/factory ('Y/y' not erase)
+#CONFIG_RESIGN_OTA_PKG_SOURCE    : Path to input OTA package file that will be resigned
+#CONFIG_OLD_OEM_CUSTK_FILE_PATH  : File containing the original OEM_CUSTK key (Optional, just for resign_OTA.sh)
+#CONFIG_NEW_OEM_CUSTK_FILE_PATH  : File containing the new raw OEM_CUSTK key to be used (Optional, just for resign_OTA.sh)
+#CONFIG_NEW_EXTRSA_KEY_FILE_PATH : PEM file containing OEM_EXTRSA keys (Optional, just for resign_OTA.sh)
+
+CONFIG_ANDROID_PATH="/vs680/android"
+CONFIG_SDK_PATH="/vs680/synaptics-sdk"
+CONFIG_ANDROID_OTA_PKG_SOURCE="/vs680/android/out/target/product/sequoia/sequoia-ota-eng.zip"
+CONFIG_ANDROID_PRODUCT_NAME="sequoia"
+CONFIG_SDK_PRODUCT_NAME="vs680_a0_android_stb_v4"
+CONFIG_SIGNK7_FILE_PATH="/vs680/keys/rootrsa_signk7.keystore"
+CONFIG_CUSTK_FILE_PATH="/vs680/keys/custk_aesk0.keystore"
+CONFIG_EXTRSA_KEY_FILE_PATH="/vs680/keys/extrsa_signk7.keystore"
+CONFIG_SKIP_FACTORY_SETTING="Y"
+CONFIG_RESIGN_OTA_PKG_SOURCE="/vs680/sequoia-ota-eng.MDK.zip"
+CONFIG_OLD_OEM_CUSTK_FILE_PATH="/vs680/keys/old_custk.bin"
+CONFIG_NEW_OEM_CUSTK_FILE_PATH="/vs680/keys/new_custk.bin"
+CONFIG_NEW_EXTRSA_KEY_FILE_PATH="/vs680/keys/new_extrsa.pem"
