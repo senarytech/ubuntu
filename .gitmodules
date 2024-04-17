@@ -1,0 +1,3 @@
+[submodule "linux_5_4"]
+	path = linux_5_4
+	url = git@github.com:senarytech/linux_5_4.git
