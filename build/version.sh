@@ -7,7 +7,7 @@ rm -f ${VER_FILE}
 #
 # current sdk version: v1.3
 #
-SDK_VER="v1.9.2"
+SDK_VER="v1.9.1"
 
 echo "SDK_VER:"${SDK_VER} > ${VER_FILE}
 
